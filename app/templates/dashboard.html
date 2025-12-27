@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>SOS Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Login Successful</h2>
-    <p>Welcome to SOS system</p>
+
+<h2 class="title">One-Stop SOS Dashboard</h2>
+
+<div class="grid-container">
+
+    <form action="/alert/harassment" method="post">
+        <button class="card danger">Harassment</button>
+    </form>
+
+    <button class="card">Mechanic</button>
+    <button class="card">Electrician</button>
+    <button class="card police">Police</button>
+    <button class="card ambulance">Ambulance</button>
+    <button class="card">Plumber</button>
+
+</div>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
 </body>
 </html>
