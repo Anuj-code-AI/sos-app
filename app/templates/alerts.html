@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Alerts</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Alert{% endblock %}
 
-<h2 class="title">Active Alerts</h2>
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/alerts.css') }}">
+{% endblock %}
 
-<div class="alerts">
-    {% for alert in alerts %}
-        <div class="alert-box">
-            {{ alert.message }} <br>
-            <small>{{ alert.created_at }}</small>
-        </div>
-    {% endfor %}
+{% block content %}
+<div class="alert-box">
+    <h3>🚨 Emergency Alert</h3>
+    <p id="alertMessage"></p>
+    <p id="alertLocation"></p>
 </div>
 
-<a href="/dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+<a href="/dashboard">Back</a>
+{% endblock %}

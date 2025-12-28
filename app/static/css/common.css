@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: #f4f6f8;
+}
+
+.app-header {
+    background: #ff416c;
+    color: white;
+    padding: 16px;
+    font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.app-main {
+    padding: 20px;
+}

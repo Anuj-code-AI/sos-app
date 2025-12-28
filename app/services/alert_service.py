@@ -5,10 +5,21 @@ from app.socket import socketio
 class AlertService:
 
     @staticmethod
-    def send_harassment_alert():
+    def send_harassment_alert(lat, lng, sender_id):
         message = "🚨 HARASSMENT ALERT: A user needs immediate help!"
-        AlertRepository.save_alert(message)
 
-        # PUSH TO ALL CONNECTED USERS
-        for socket_id in connected_users.values():
-            socketio.emit("new_alert", {"message": message}, to=socket_id)
+        alert = AlertRepository.save_alert(message, lat, lng)
+        print("CONNECTED USERS AT SEND:", connected_users)
+        for user_id, socket_id in connected_users.items():
+            if int(user_id) == int(sender_id):
+                continue  # ❌ DO NOT SEND TO SENDER
+
+            socketio.emit(
+                "new_alert",
+                {
+                    "message": alert.message,
+                    "lat": alert.lat,
+                    "lng": alert.lng
+                },
+                to=socket_id
+            )

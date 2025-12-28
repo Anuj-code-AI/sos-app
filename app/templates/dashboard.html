@@ -1,31 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>SOS Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
 
-<h2 class="title">One-Stop SOS Dashboard</h2>
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
 
-<div class="grid-container">
+{% block content %}
+<h2 class="page-title">Emergency Actions</h2>
 
-    <form action="/alert/harassment" method="post">
-        <button class="card danger">Harassment</button>
-    </form>
 
+<div id="alert-container"></div>
+<div class="grid">
+    <button class="card danger" onclick="sendHarassment()">Harassment</button>
     <button class="card">Mechanic</button>
     <button class="card">Electrician</button>
     <button class="card police">Police</button>
     <button class="card ambulance">Ambulance</button>
     <button class="card">Plumber</button>
-
 </div>
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+{% endblock %}
+
+{% block js %}
 <script>
     localStorage.setItem("user_id", "{{ session['user_id'] }}");
 </script>
+<script src="{{ url_for('static', filename='js/location.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-
-</body>
-</html>
+{% endblock %}

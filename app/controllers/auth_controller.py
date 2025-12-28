@@ -24,14 +24,21 @@ def login():
 
     return redirect(url_for("auth.dashboard"))
 
+@auth_bp.route("/register", methods=["GET"])
+def register_page():
+    return render_template("register.html")
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
     name = request.form["name"]
     email = request.form["email"]
     password = request.form["password"]
+    address = request.form["address"]
 
-    success, message = AuthService.register_user(name, email, password)
+    success, message = AuthService.register_user(
+        name, email, password, address
+    )
+
     flash(message)
     return redirect(url_for("auth.login_page"))
 

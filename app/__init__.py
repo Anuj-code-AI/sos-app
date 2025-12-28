@@ -11,6 +11,10 @@ def create_app():
     db.init_app(app)
     socketio.init_app(app)
 
+    # 🔥 REGISTER SOCKET EVENTS (THIS WAS MISSING)
+    from app.controllers import socket_controller
+
+
     with app.app_context():
         db.create_all()
 

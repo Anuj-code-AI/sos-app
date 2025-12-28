@@ -4,11 +4,12 @@ from app.models.alert import Alert
 class AlertRepository:
 
     @staticmethod
-    def save_alert(message):
-        alert = Alert(message=message)
+    def save_alert(message, lat, lng):
+        alert = Alert(
+            message=message,
+            lat=lat,
+            lng=lng
+        )
         db.session.add(alert)
         db.session.commit()
-
-    @staticmethod
-    def get_all_alerts():
-        return Alert.query.order_by(Alert.created_at.desc()).all()
+        return alert
