@@ -3,3 +3,5 @@ flask-sqlalchemy
 pymysql
 werkzeug
 python-dotenv
+flask-socketio
+eventlet

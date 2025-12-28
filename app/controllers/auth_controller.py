@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.services.auth_service import AuthService
+from flask import session
+
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -17,7 +19,11 @@ def login():
         flash(result)
         return redirect(url_for("auth.login_page"))
 
+    # 🔥 ADD THIS LINE HERE (AFTER SUCCESSFUL LOGIN)
+    session["user_id"] = result.id
+
     return redirect(url_for("auth.dashboard"))
+
 
 @auth_bp.route("/register", methods=["POST"])
 def register():

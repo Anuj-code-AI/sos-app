@@ -21,6 +21,10 @@
     <button class="card">Plumber</button>
 
 </div>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+    localStorage.setItem("user_id", "{{ session['user_id'] }}");
+</script>
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 
 </body>
