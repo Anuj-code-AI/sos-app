@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.services.auth_service import AuthService
 from flask import session
 
-
 auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/", methods=["GET"])
@@ -42,6 +41,10 @@ def register():
     flash(message)
     return redirect(url_for("auth.login_page"))
 
+
+
 @auth_bp.route("/dashboard")
 def dashboard():
+    if "user_id" not in session:
+        return redirect(url_for("auth.login_page"))
     return render_template("dashboard.html")

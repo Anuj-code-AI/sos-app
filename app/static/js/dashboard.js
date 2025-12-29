@@ -51,8 +51,12 @@ function sendHarassment() {
     getLocation((lat, lng) => {
         fetch("/alert/harassment", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({ lat, lng })
         });
+
     });
 }
