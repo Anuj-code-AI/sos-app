@@ -13,10 +13,13 @@ function showAlert(data) {
     const alertBox = document.createElement("div");
     alertBox.className = "alert-card";
 
+    const mapId = "map-" + Date.now();
+
     alertBox.innerHTML = `
         <h3>🚨 Emergency Alert</h3>
         <p>${data.message}</p>
-        <p><strong>Location:</strong> ${data.lat}, ${data.lng}</p>
+
+        <div class="map" id="${mapId}"></div>
 
         <div class="actions">
             <button class="yes">✔ I am near</button>
@@ -27,7 +30,22 @@ function showAlert(data) {
     alertBox.querySelector(".no").onclick = () => alertBox.remove();
 
     container.prepend(alertBox);
+
+    // 🗺️ Initialize Leaflet map AFTER DOM insertion
+    setTimeout(() => {
+        const map = L.map(mapId).setView([data.lat, data.lng], 15);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(map);
+
+        L.marker([data.lat, data.lng])
+            .addTo(map)
+            .bindPopup("Help needed here")
+            .openPopup();
+    }, 0);
 }
+
 
 function sendHarassment() {
     getLocation((lat, lng) => {
