@@ -6,3 +6,4 @@ python-dotenv
 flask-socketio
 eventlet
 gunicorn
+psycopg2-binary
