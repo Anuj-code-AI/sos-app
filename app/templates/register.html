@@ -1,19 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
+
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="auth-box">
-    <h3>Create Account</h3>
+<div class="auth-wrapper">
+    <div class="auth-box">
+        <h2>Create Account</h2>
+        <p class="subtitle">Join the safety network</p>
 
-    <form method="post" action="/register">
-        <input name="name" placeholder="Name" required>
-        <input name="email" type="email" placeholder="Email" required>
-        <input name="password" type="password" placeholder="Password" required>
-        <input name="address" placeholder="Address (Area / City)" required>
-        <button>Register</button>
-    </form>
+        <form method="post" action="/register">
+            <input name="name" placeholder="Full name" required>
+            <input name="email" type="email" placeholder="Email address" required>
+            <input name="password" type="password" placeholder="Password" required>
+            <input name="address" placeholder="Area / City" required>
+            <button type="submit">Register</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

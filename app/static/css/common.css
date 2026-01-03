@@ -1,18 +1,37 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    font-family: system-ui, sans-serif;
-    background: #f4f6f8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f4f6fb;
+    color: #1f2937;
 }
 
 .app-header {
-    background: #ff416c;
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
     color: white;
-    padding: 16px;
+    padding: 16px 24px;
     font-size: 20px;
-    text-align: center;
     font-weight: 600;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
 .app-main {
-    padding: 20px;
+    padding: 30px 16px 60px;
+}
+
+a {
+    color: #ff416c;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
 }

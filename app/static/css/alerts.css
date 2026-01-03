@@ -1,7 +1,19 @@
 .alert-box {
-    background: #fff3cd;
-    padding: 25px;
-    border-radius: 12px;
-    max-width: 500px;
+    background: white;
+    padding: 28px;
+    border-radius: 18px;
+    max-width: 520px;
     margin: auto;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+}
+
+.alert-box h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 14px;
 }

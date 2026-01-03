@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Alert{% endblock %}
+{% block title %}Emergency Alert{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/alerts.css') }}">
@@ -10,7 +10,6 @@
     <h3>🚨 Emergency Alert</h3>
     <p id="alertMessage"></p>
     <p id="alertLocation"></p>
+    <a class="back-btn" href="/dashboard">← Back to Dashboard</a>
 </div>
-
-<a href="/dashboard">Back</a>
 {% endblock %}
