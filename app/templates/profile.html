@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-box">
+    <h2>Your Profile</h2>
+
+    <form method="post">
+        <label>Name</label>
+        <input name="name" value="{{ user.name }}" required>
+
+        <label>Email</label>
+        <input value="{{ user.email }}" disabled>
+
+        <label>Address</label>
+        <input name="address" value="{{ user.address }}" required>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <a href="/dashboard" class="back">← Back to Dashboard</a>
+</div>
+{% endblock %}

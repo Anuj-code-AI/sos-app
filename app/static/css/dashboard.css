@@ -90,3 +90,19 @@
     color: #064e3b;
     font-weight: 500;
 }
+
+.dashboard-top {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 1000px;
+    margin: 0 auto 20px;
+}
+
+.profile-btn {
+    padding: 10px 16px;
+    background: #111827;
+    color: white;
+    border-radius: 10px;
+    font-weight: 500;
+}
+

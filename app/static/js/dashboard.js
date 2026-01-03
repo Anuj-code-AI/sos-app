@@ -80,7 +80,7 @@ function showHelpAcceptedMessage(message) {
     msgBox.className = "alert-card help-accepted";
 
     msgBox.innerHTML = `
-        <h3>✅ Help Accepted</h3>
+        <h3>Don't Worry</h3>
         <p>${message}</p>
     `;
 
