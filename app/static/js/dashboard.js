@@ -24,6 +24,15 @@ function showAlert(data) {
 
         <div class="map" id="${mapId}"></div>
 
+        <a 
+            class="maps-link"
+            href="https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            🧭 Open in Google Maps
+        </a>
+
         <div class="actions">
             <button class="yes">✔ I am near</button>
             <button class="no">✖ Ignore</button>
@@ -31,12 +40,12 @@ function showAlert(data) {
     `;
 
 
+
     alertBox.querySelector(".no").onclick = () => alertBox.remove();
     alertBox.querySelector(".yes").onclick = () => {
         socket.emit("help_accepted", {
             sender_id: data.sender_id
         });
-        alertBox.remove();
     };
 
     container.prepend(alertBox);

@@ -125,12 +125,13 @@
 .alert-card.harassment { border-left: 6px solid #ef4444; }
 .alert-card.fire { border-left: 6px solid #f97316; }
 .alert-card.medical { border-left: 6px solid #22c55e; }
-.live-dot {
-  width: 8px;
-  height: 8px;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: pulse 1.5s infinite;
+
+.maps-link {
+    display: block;
+    margin: 10px 0;
+    text-align: center;
+    font-weight: 600;
+    color: #2563eb;
 }
 
 
