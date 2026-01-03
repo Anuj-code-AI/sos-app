@@ -17,3 +17,18 @@ def handle_disconnect():
         if sid == request.sid:
             del connected_users[uid]
             print(f"User {uid} disconnected")
+
+@socketio.on("help_accepted")
+def handle_help_accepted(data):
+    sender_id = data.get("sender_id")
+    if not sender_id:
+        return
+
+    sender_socket = connected_users.get(str(sender_id))
+    if sender_socket:
+        emit(
+            "help_accepted_ack",
+            {"message": "✅ Help accepted by someone nearby"},
+            to=sender_socket
+        )
+

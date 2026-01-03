@@ -5,6 +5,9 @@ const socket = io({
 socket.on("new_alert", data => {
     showAlert(data);
 });
+socket.on("help_accepted_ack", data => {
+    showHelpAcceptedMessage(data.message);
+});
 
 function showAlert(data) {
     const container = document.getElementById("alert-container");
@@ -27,7 +30,14 @@ function showAlert(data) {
         </div>
     `;
 
+
     alertBox.querySelector(".no").onclick = () => alertBox.remove();
+    alertBox.querySelector(".yes").onclick = () => {
+        socket.emit("help_accepted", {
+            sender_id: data.sender_id
+        });
+        alertBox.remove();
+    };
 
     container.prepend(alertBox);
 
@@ -59,4 +69,25 @@ function sendHarassment() {
         });
 
     });
+}
+
+
+function showHelpAcceptedMessage(message) {
+    const container = document.getElementById("alert-container");
+    if (!container) return;
+
+    const msgBox = document.createElement("div");
+    msgBox.className = "alert-card help-accepted";
+
+    msgBox.innerHTML = `
+        <h3>✅ Help Accepted</h3>
+        <p>${message}</p>
+    `;
+
+    container.prepend(msgBox);
+
+    // optional auto-dismiss after 8 seconds
+    setTimeout(() => {
+        msgBox.remove();
+    }, 8000);
 }

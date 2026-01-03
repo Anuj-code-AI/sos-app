@@ -19,7 +19,9 @@ class AlertService:
                 {
                     "message": alert.message,
                     "lat": alert.lat,
-                    "lng": alert.lng
+                    "lng": alert.lng,
+                    "sender_id": sender_id   # ✅ ADD THIS
                 },
                 to=socket_id
             )
+
