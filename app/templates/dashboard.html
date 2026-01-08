@@ -21,16 +21,33 @@
 
 <!-- HEADER -->
 <header class="bg-red-500 text-white p-4 flex justify-between items-center shadow-md">
-    <div class="flex items-center gap-3">
-        <img src="/static/logo.png" class="h-10 w-10 rounded-lg" />
-        <span class="text-xl font-bold">One-Stop SOS</span>
+    <!-- Left: Logo / App Name -->
+    <div class="flex items-center gap-2 font-bold text-lg">
+        🚨 <span class="hidden sm:inline">One-Stop SOS</span>
+        <span class="sm:hidden">SOS</span>
     </div>
 
-    <div class="flex gap-3">
-        <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold">👤 Profile</a>
-        <a href="/logout"  onclick="localStorage.clear()" class="bg-black text-white px-4 py-2 rounded-lg font-semibold">🚪 Logout</a>
+    <!-- Desktop Buttons -->
+    <div class="hidden sm:flex gap-3">
+        <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold shadow">
+            👤 Profile
+        </a>
+        <a href="/logout" class="bg-black text-white px-4 py-2 rounded-lg font-semibold shadow"
+           onclick="localStorage.clear()">
+            🚪 Logout
+        </a>
     </div>
+
+    <!-- Mobile Hamburger -->
+    <button class="sm:hidden text-2xl" onclick="toggleMobileMenu()">☰</button>
 </header>
+
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="hidden bg-white shadow-md border-b">
+    <a href="/profile" class="block px-4 py-3 border-b">👤 Profile</a>
+    <a href="/logout" onclick="localStorage.clear()" class="block px-4 py-3">🚪 Logout</a>
+</div>
+
 
 
 <!-- ALERT CONTAINER -->
@@ -94,6 +111,12 @@ fetch("/api/me")
   });
 </script>
 
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById("mobileMenu");
+    menu.classList.toggle("hidden");
+}
+</script>
 
 
 </body>

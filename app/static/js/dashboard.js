@@ -98,7 +98,6 @@ function sendHarassment(customMessage = "") {
     });
 }
 
-
 function showHelpAcceptedMessage(message) {
     const container = document.getElementById("alert-container");
     if (!container) return;
@@ -106,13 +105,23 @@ function showHelpAcceptedMessage(message) {
     const msgBox = document.createElement("div");
     const mapId = "sender-map-" + Date.now();
 
-    msgBox.className = "bg-green-100 border-l-4 border-green-500 p-5 rounded-xl shadow-xl space-y-3";
+    msgBox.className = "relative bg-green-100 border-l-4 border-green-500 p-5 rounded-xl shadow-xl space-y-3";
 
     msgBox.innerHTML = `
+        <!-- Close Button -->
+        <button class="absolute top-2 right-2 text-gray-600 hover:text-black text-xl font-bold">
+            ✖
+        </button>
+
         <h3 class="text-lg font-bold text-green-700">✅ Help is on the way</h3>
         <p>${message}</p>
         <div id="${mapId}" class="w-full h-[250px] rounded-xl overflow-hidden"></div>
     `;
+
+    // Close handler
+    msgBox.querySelector("button").onclick = () => {
+        msgBox.remove();
+    };
 
     container.prepend(msgBox);
 
@@ -123,6 +132,7 @@ function showHelpAcceptedMessage(message) {
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(senderMap);
     }, 0);
 }
+
 
 
 function showHelperOnSenderMap(lat, lng) {

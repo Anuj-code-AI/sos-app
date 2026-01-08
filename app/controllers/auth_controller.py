@@ -23,6 +23,11 @@ def login():
 
     return redirect(url_for("auth.dashboard"))
 
+@auth_bp.route("/logout",methods=["GET"])
+def logout():
+    session.clear()
+    return redirect("/login")
+
 @auth_bp.route("/register", methods=["GET"])
 def register_page():
     return send_from_directory('templates', 'register.html')
