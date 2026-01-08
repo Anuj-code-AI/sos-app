@@ -5,7 +5,6 @@ alert_bp = Blueprint("alert", __name__)
 
 @alert_bp.route("/alert/harassment", methods=["POST"])
 def harassment_alert():
-    print("🔥 harassment endpoint HIT")
     data = request.json
     print("DATA:", data)
 

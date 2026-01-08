@@ -3,6 +3,7 @@ from app.services.profile_service import ProfileService
 from flask import send_from_directory
 
 profile_bp = Blueprint("profile", __name__)
+print("🔥🔥🔥 NEW PROFILE CONTROLLER LOADED FROM UI-ONLY BRANCH 🔥🔥🔥")
 
 @profile_bp.route("/profile", methods=["GET"])
 def profile_page():
@@ -10,8 +11,7 @@ def profile_page():
     if not user_id:
         return redirect("/login")
 
-    user = ProfileService.get_user_profile(user_id)
-    return send_from_directory('templates', 'profile.html', user=user)
+    return send_from_directory("static_site", "profile.html")
 
 @profile_bp.route("/profile", methods=["POST"])
 def update_profile():

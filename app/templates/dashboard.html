@@ -1,126 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>One-Stop SOS</title>
 
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <style>
-        .alert-card {
-            background: #fff3cd;
-            border-left: 6px solid #ef4444;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .map {
-            height: 200px;
-            width: 100%;
-            border-radius: 10px;
-            margin: 12px 0;
-        }
-
-        .actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .actions button {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-        }
-
-        .actions .yes {
-            background: #22c55e;
-            color: white;
-        }
-
-        .actions .no {
-            background: #ef4444;
-            color: white;
-        }
-    </style>
-
     <!-- Socket -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 min-h-screen">
 
-    <header class="bg-red-500 text-white p-4 flex justify-between items-center">
-        <div class="text-xl font-bold">One-Stop SOS</div>
-        <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold">
-            👤 Profile
-        </a>
-    </header>
+<!-- HEADER -->
+<header class="bg-red-500 text-white p-4 flex justify-between items-center shadow-md">
+    <div class="text-xl font-bold">One-Stop SOS</div>
+    <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold shadow">
+        👤 Profile
+    </a>
+</header>
 
+<!-- ALERT CONTAINER -->
+<div id="alert-container"
+     class="fixed top-20 left-1/2 -translate-x-1/2 w-[95%] max-w-2xl z-50 space-y-4">
+</div>
 
-    <div id="alert-container" class="fixed top-20 left-1/2 -translate-x-1/2 w-[95%] max-w-2xl z-50 space-y-4">
+<!-- MAIN -->
+<main class="p-6">
+
+    <h2 class="text-center text-2xl font-bold mb-8">Emergency Services</h2>
+
+    <!-- GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+
+        <button onclick="sendHarassment()"
+                class="h-40 rounded-2xl bg-red-500 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
+            🚨 Harassment
+        </button>
+
+        <button
+                class="h-40 rounded-2xl bg-blue-700 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
+            👮 Police
+        </button>
+
+        <button
+                class="h-40 rounded-2xl bg-green-600 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
+            🚑 Ambulance
+        </button>
+
+        <button
+                class="h-40 rounded-2xl bg-yellow-500 text-black text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
+            ⚡ Electrician
+        </button>
+
+        <button
+                class="h-40 rounded-2xl bg-pink-600 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
+            🔧 Mechanic
+        </button>
+
+        <button
+                class="h-40 rounded-2xl bg-indigo-500 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
+            🚰 Plumber
+        </button>
+
     </div>
 
+    <!-- OPTIONAL: Sender map for live helper tracking -->
+    <div id="sender-map" class="w-full max-w-4xl mx-auto h-[300px] rounded-xl mt-10 hidden"></div>
 
-    <main class="p-6">
+</main>
 
-        <h2 class="text-center text-2xl font-bold mb-8">Emergency Services</h2>
+<!-- JS -->
+<script src="/static/js/location.js"></script>
+<script src="/static/js/dashboard.js"></script>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-
-
-            <button onclick="sendHarassment()"
-                class="h-40 rounded-2xl bg-red-500 text-white text-xl font-semibold shadow hover:scale-105 transition">
-                🚨 Harassment
-            </button>
-
-            <button
-                class="h-40 rounded-2xl bg-blue-700 text-white text-xl font-semibold shadow hover:scale-105 transition">
-                👮 Police
-            </button>
-
-            <button
-                class="h-40 rounded-2xl bg-green-600 text-white text-xl font-semibold shadow hover:scale-105 transition">
-                🚑 Ambulance
-            </button>
-
-            <button
-                class="h-40 rounded-2xl bg-yellow-500 text-black text-xl font-semibold shadow hover:scale-105 transition">
-                ⚡ Electrician
-            </button>
-
-            <button
-                class="h-40 rounded-2xl bg-pink-600 text-white text-xl font-semibold shadow hover:scale-105 transition">
-                🔧 Mechanic
-            </button>
-
-            <button
-                class="h-40 rounded-2xl bg-indigo-500 text-white text-xl font-semibold shadow hover:scale-105 transition">
-                🚰 Plumber
-            </button>
-
-        </div>
-
-    </main>
-
-    <!-- Your existing JS -->
-    <script src="/static/js/location.js"></script>
-    <script src="/static/js/dashboard.js"></script>
-
-    <script>
-        // TEMP: for now store manually
-        if (!localStorage.getItem("user_id")) {
-            localStorage.setItem("user_id", "demo_user_123");
-        }
-    </script>
+<script>
+    // TEMP: demo user id
+    if (!localStorage.getItem("user_id")) {
+        localStorage.setItem("user_id", "demo_user_123");
+    }
+</script>
 
 </body>
-
 </html>
