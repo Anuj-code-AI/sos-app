@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Your Profile</title>
@@ -8,52 +9,91 @@
 
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
-<div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
 
-    <h2 class="text-2xl font-bold text-center mb-6">Your Profile</h2>
+        <h2 class="text-2xl font-bold text-center mb-6">Your Profile</h2>
 
-    <form method="post" class="space-y-4">
+        <form method="post" class="space-y-4">
 
-        <div>
-            <label class="block text-sm font-semibold mb-1">Name</label>
-            <input name="name" placeholder="Your name"
-                   class="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500" required>
-        </div>
+            <div>
+                <label class="block text-sm font-semibold mb-1">Name</label>
+                <input name="name" placeholder="Your name"
+                    class="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+            </div>
 
-        <div>
-            <label class="block text-sm font-semibold mb-1">Email</label>
-            <input placeholder="youremail@example.com" disabled
-                   class="w-full border rounded-lg p-2 bg-gray-100 text-gray-500">
-        </div>
+            <div>
+                <label class="block text-sm font-semibold mb-1">Email</label>
+                <input placeholder="youremail@example.com" disabled
+                    class="w-full border rounded-lg p-2 bg-gray-100 text-gray-500">
+            </div>
 
-        <div>
-            <label class="block text-sm font-semibold mb-1">Address</label>
-            <input name="address" placeholder="Your address"
-                   class="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500" required>
-        </div>
+            <div>
+                <label class="block text-sm font-semibold mb-1">Address</label>
+                <input name="address" placeholder="Your address"
+                    class="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+            </div>
 
-        <button type="submit"
+            <button type="submit"
                 class="w-full bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-red-600 transition">
-            Save Changes
-        </button>
+                Save Changes
+            </button>
 
-    </form>
+        </form>
 
-    <a href="/dashboard"
-       class="block text-center mt-6 text-red-600 font-semibold hover:underline">
-        ← Back to Dashboard
-    </a>
+        <a href="/dashboard" class="block text-center mt-6 text-red-600 font-semibold hover:underline">
+            ← Back to Dashboard
+        </a>
 
-</div>
-<script>
-fetch("/api/profile")
-  .then(r => r.json())
-  .then(user => {
-      document.querySelector('input[name="name"]').value = user.name || "";
-      document.querySelector('input[placeholder="youremail@example.com"]').value = user.email || "";
-      document.querySelector('input[name="address"]').value = user.address || "";
-  });
-</script>
+    </div>
+
+    <footer class="mt-16 bg-gray-900 text-gray-300">
+        <div class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+            <!-- App Info -->
+            <div>
+                <h3 class="text-white text-lg font-bold mb-2">ResQnet 🚨</h3>
+                <p class="text-sm">
+                    A smart SOS and community alert system to get help faster in emergencies.
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h4 class="text-white font-semibold mb-2">Quick Links</h4>
+                <ul class="space-y-1 text-sm">
+                    <li><a href="/dashboard" class="hover:text-white">Dashboard</a></li>
+                    <li><a href="/profile" class="hover:text-white">Profile</a></li>
+                    <li><a href="/logout" class="hover:text-white">Logout</a></li>
+                </ul>
+            </div>
+
+            <!-- Credits -->
+            <div>
+                <h4 class="text-white font-semibold mb-2">Project</h4>
+                <p class="text-sm">
+                    Built for Hackathon 2026<br>
+                    By Team The HiveMinds
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-gray-700 text-center py-3 text-sm text-gray-400">
+            © 2026 ResQnet. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        fetch("/api/profile")
+            .then(r => r.json())
+            .then(user => {
+                document.querySelector('input[name="name"]').value = user.name || "";
+                document.querySelector('input[placeholder="youremail@example.com"]').value = user.email || "";
+                document.querySelector('input[name="address"]').value = user.address || "";
+            });
+    </script>
 
 </body>
+
 </html>
