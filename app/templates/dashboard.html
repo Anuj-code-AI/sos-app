@@ -82,8 +82,14 @@
 <script src="/static/js/dashboard.js"></script>
 
 <script>
-    localStorage.setItem("user_id", "{{ session['user_id'] }}");
+fetch("/api/me")
+  .then(r => r.json())
+  .then(d => {
+      localStorage.setItem("user_id", String(d.user_id));
+      console.log("✅ USER ID SET:", d.user_id);
+  });
 </script>
+
 
 
 </body>

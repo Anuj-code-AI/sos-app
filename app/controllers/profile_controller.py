@@ -24,3 +24,21 @@ def update_profile():
 
     ProfileService.update_profile(user_id, name, address)
     return redirect("/profile")
+
+@app.route("/api/me")
+def get_me():
+    return {"user_id": session.get("user_id")}
+
+@profile_bp.route("/api/profile", methods=["GET"])
+def get_profile():
+    user_id = session.get("user_id")
+    if not user_id:
+        return {"error": "not logged in"}, 401
+
+    user = ProfileService.get_user_profile(user_id)
+
+    return {
+        "name": user.name,
+        "email": user.email,
+        "address": user.address
+    }

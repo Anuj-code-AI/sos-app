@@ -11,7 +11,7 @@ class AlertService:
         alert = AlertRepository.save_alert(message, lat, lng)
         print("CONNECTED USERS AT SEND:", connected_users)
         for user_id, socket_id in connected_users.items():
-            if int(user_id) == int(sender_id):
+            if str(user_id) == str(sender_id):
                 continue  # ❌ DO NOT SEND TO SENDER
 
             socketio.emit(

@@ -5,6 +5,7 @@
     <title>Your Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
 <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
@@ -44,6 +45,15 @@
     </a>
 
 </div>
+<script>
+fetch("/api/profile")
+  .then(r => r.json())
+  .then(user => {
+      document.querySelector('input[name="name"]').value = user.name || "";
+      document.querySelector('input[placeholder="youremail@example.com"]').value = user.email || "";
+      document.querySelector('input[name="address"]').value = user.address || "";
+  });
+</script>
 
 </body>
 </html>
