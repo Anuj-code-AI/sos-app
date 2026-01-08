@@ -21,11 +21,17 @@
 
 <!-- HEADER -->
 <header class="bg-red-500 text-white p-4 flex justify-between items-center shadow-md">
-    <div class="text-xl font-bold">One-Stop SOS</div>
-    <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold shadow">
-        👤 Profile
-    </a>
+    <div class="flex items-center gap-3">
+        <img src="/static/logo.png" class="h-10 w-10 rounded-lg" />
+        <span class="text-xl font-bold">One-Stop SOS</span>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold">👤 Profile</a>
+        <a href="/logout"  onclick="localStorage.clear()" class="bg-black text-white px-4 py-2 rounded-lg font-semibold">🚪 Logout</a>
+    </div>
 </header>
+
 
 <!-- ALERT CONTAINER -->
 <div id="alert-container"
@@ -40,7 +46,7 @@
     <!-- GRID -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
 
-        <button onclick="sendHarassment()"
+        <button onclick="openConfirmHarassment()"
                 class="h-40 rounded-2xl bg-red-500 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
             🚨 Harassment
         </button>

@@ -28,6 +28,11 @@ def update_profile():
     ProfileService.update_profile(user_id, name, address)
     return redirect("/profile")
 
+@profile_bp.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+
 # API to get current user id
 @profile_bp.route("/api/me", methods=["GET"])
 def get_me():

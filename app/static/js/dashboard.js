@@ -83,16 +83,21 @@ function showAlert(data) {
 }
 
 // 🔴 Sender sends SOS
-function sendHarassment() {
+function sendHarassment(customMessage = "") {
     getLocation((lat, lng) => {
         fetch("/alert/harassment", {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ lat, lng })
+            body: JSON.stringify({
+                lat,
+                lng,
+                message: customMessage
+            })
         });
     });
 }
+
 
 function showHelpAcceptedMessage(message) {
     const container = document.getElementById("alert-container");
@@ -131,4 +136,50 @@ function showHelperOnSenderMap(lat, lng) {
     }
 
     senderMap.setView([lat, lng], 15);
+}
+
+function openConfirmHarassment() {
+    const container = document.getElementById("alert-container");
+    if (!container) return;
+
+    const box = document.createElement("div");
+
+    box.className = "bg-white border-l-4 border-red-500 p-5 rounded-xl shadow-xl space-y-3";
+
+    box.innerHTML = `
+        <h3 class="text-lg font-bold text-red-600">⚠️ Confirm Emergency Alert</h3>
+        <p class="text-gray-700">
+            Are you sure you want to send this emergency alert to nearby users?
+        </p>
+
+        <textarea id="custom-alert-message"
+                  class="w-full border rounded-lg p-2"
+                  rows="3"
+                  placeholder="Optional: Add more details (e.g. I am near bus stand, red shirt...)"></textarea>
+
+        <div class="flex gap-3 pt-2">
+            <button id="confirmSendBtn"
+                    class="flex-1 bg-red-500 text-white font-bold py-2 rounded-lg">
+                ✅ Yes, Send Alert
+            </button>
+            <button id="cancelSendBtn"
+                    class="flex-1 bg-gray-300 font-bold py-2 rounded-lg">
+                ❌ Cancel
+            </button>
+        </div>
+    `;
+
+    container.prepend(box);
+
+    // Cancel
+    box.querySelector("#cancelSendBtn").onclick = () => {
+        box.remove();
+    };
+
+    // Confirm
+    box.querySelector("#confirmSendBtn").onclick = () => {
+        const msg = box.querySelector("#custom-alert-message").value;
+        box.remove();
+        sendHarassment(msg);
+    };
 }
