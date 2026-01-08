@@ -82,11 +82,9 @@
 <script src="/static/js/dashboard.js"></script>
 
 <script>
-    // TEMP: demo user id
-    if (!localStorage.getItem("user_id")) {
-        localStorage.setItem("user_id", "demo_user_123");
-    }
+    localStorage.setItem("user_id", "{{ session['user_id'] }}");
 </script>
+
 
 </body>
 </html>

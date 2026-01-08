@@ -11,7 +11,7 @@ def profile_page():
     if not user_id:
         return redirect("/login")
 
-    return send_from_directory("static_site", "profile.html")
+    return send_from_directory("templates", "profile.html")
 
 @profile_bp.route("/profile", methods=["POST"])
 def update_profile():
