@@ -8,8 +8,12 @@ auth_bp = Blueprint("auth", __name__)
 def login_page():
     return send_from_directory('templates', 'login.html')
 
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.route("/login", methods=["GET","POST"])
 def login():
+    if request.method == "GET":
+        return send_from_directory("templates", "login.html")
+
+    # POST logic here
     email = request.form["email"]
     password = request.form["password"]
 

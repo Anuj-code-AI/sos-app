@@ -4,14 +4,19 @@ from app.socket import socketio
 
 connected_users = {}  # user_id (str) -> socket_id
 
+
 @socketio.on("connect")
 def handle_connect():
     user_id = request.args.get("user_id")
-    if user_id:
-        user_id = str(user_id)
-        connected_users[user_id] = request.sid
-        print("✅ USER CONNECTED:", user_id)
-        print("CONNECTED USERS:", connected_users)
+
+    if not user_id or user_id == "null":
+        print("❌ REJECTED SOCKET WITH INVALID USER")
+        return False   # reject connection
+
+    user_id = str(user_id)
+    connected_users[user_id] = request.sid
+    print("✅ USER CONNECTED:", user_id)
+    print("CONNECTED USERS:", connected_users)
 
 @socketio.on("disconnect")
 def handle_disconnect():

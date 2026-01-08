@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>One-Stop SOS</title>
+    <title>ResQnet</title>
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,105 +20,110 @@
 
 <body class="bg-gray-100 min-h-screen">
 
-<!-- HEADER -->
-<header class="bg-red-500 text-white p-4 flex justify-between items-center shadow-md">
-    <!-- Left: Logo / App Name -->
-    <div class="flex items-center gap-2 font-bold text-lg">
-        🚨 <span class="hidden sm:inline">One-Stop SOS</span>
-        <span class="sm:hidden">SOS</span>
+    <!-- HEADER -->
+    <header class="bg-red-500 text-white p-4 flex justify-between items-center shadow-md">
+        <!-- Left: Logo / App Name -->
+        <a href="/dashboard" class="flex items-center gap-2 font-bold text-lg">
+            <img src="/static/images/logo.png" alt="ResQnet" class="h-8 w-8 object-contain">
+            <span class="hidden sm:inline">ResQnet</span>
+            <span class="sm:hidden">SOS</span>
+        </a>
+
+
+
+        <!-- Desktop Buttons -->
+        <div class="hidden sm:flex gap-3">
+            <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold shadow">
+                👤 Profile
+            </a>
+            <a href="/logout" class="bg-black text-white px-4 py-2 rounded-lg font-semibold shadow"
+                onclick="localStorage.clear()">
+                🚪 Logout
+            </a>
+        </div>
+
+        <!-- Mobile Hamburger -->
+        <button class="sm:hidden text-2xl" onclick="toggleMobileMenu()">☰</button>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden bg-white shadow-md border-b">
+        <a href="/profile" class="block px-4 py-3 border-b">👤 Profile</a>
+        <a href="/logout" onclick="localStorage.clear()" class="block px-4 py-3">🚪 Logout</a>
     </div>
 
-    <!-- Desktop Buttons -->
-    <div class="hidden sm:flex gap-3">
-        <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold shadow">
-            👤 Profile
-        </a>
-        <a href="/logout" class="bg-black text-white px-4 py-2 rounded-lg font-semibold shadow"
-           onclick="localStorage.clear()">
-            🚪 Logout
-        </a>
+
+
+    <!-- ALERT CONTAINER -->
+    <div id="alert-container" class="fixed top-20 left-1/2 -translate-x-1/2 w-[95%] max-w-2xl z-50 space-y-4">
     </div>
 
-    <!-- Mobile Hamburger -->
-    <button class="sm:hidden text-2xl" onclick="toggleMobileMenu()">☰</button>
-</header>
+    <!-- MAIN -->
+    <main class="p-6">
 
-<!-- Mobile Menu -->
-<div id="mobileMenu" class="hidden bg-white shadow-md border-b">
-    <a href="/profile" class="block px-4 py-3 border-b">👤 Profile</a>
-    <a href="/logout" onclick="localStorage.clear()" class="block px-4 py-3">🚪 Logout</a>
-</div>
+        <h2 class="text-center text-2xl font-bold mb-8">Emergency Services</h2>
 
+        <!-- GRID -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
 
-
-<!-- ALERT CONTAINER -->
-<div id="alert-container"
-     class="fixed top-20 left-1/2 -translate-x-1/2 w-[95%] max-w-2xl z-50 space-y-4">
-</div>
-
-<!-- MAIN -->
-<main class="p-6">
-
-    <h2 class="text-center text-2xl font-bold mb-8">Emergency Services</h2>
-
-    <!-- GRID -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-
-        <button onclick="openConfirmHarassment()"
+            <button onclick="openConfirmHarassment()"
                 class="h-40 rounded-2xl bg-red-500 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
-            🚨 Harassment
-        </button>
+                🚨 Harassment
+            </button>
 
-        <button
+            <button
                 class="h-40 rounded-2xl bg-blue-700 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
-            👮 Police
-        </button>
+                👮 Police
+            </button>
 
-        <button
+            <button
                 class="h-40 rounded-2xl bg-green-600 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
-            🚑 Ambulance
-        </button>
+                🚑 Ambulance
+            </button>
 
-        <button
+            <button
                 class="h-40 rounded-2xl bg-yellow-500 text-black text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
-            ⚡ Electrician
-        </button>
+                ⚡ Electrician
+            </button>
 
-        <button
+            <button
                 class="h-40 rounded-2xl bg-pink-600 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
-            🔧 Mechanic
-        </button>
+                🔧 Mechanic
+            </button>
 
-        <button
+            <button
                 class="h-40 rounded-2xl bg-indigo-500 text-white text-xl font-semibold shadow-lg hover:scale-105 transition flex items-center justify-center">
-            🚰 Plumber
-        </button>
+                🚰 Plumber
+            </button>
 
-    </div>
+        </div>
 
-    
-</main>
 
-<!-- JS -->
-<script src="/static/js/location.js"></script>
-<script src="/static/js/dashboard.js"></script>
+    </main>
 
-<script>
-fetch("/api/me")
-  .then(r => r.json())
-  .then(d => {
-      localStorage.setItem("user_id", String(d.user_id));
-      console.log("✅ USER ID SET:", d.user_id);
-  });
-</script>
+    <!-- JS -->
+    <script src="/static/js/location.js"></script>
+    <script src="/static/js/dashboard.js"></script>
 
-<script>
-function toggleMobileMenu() {
-    const menu = document.getElementById("mobileMenu");
-    menu.classList.toggle("hidden");
-}
-</script>
+    <script>
+        fetch("/api/me")
+            .then(r => r.json())
+            .then(d => {
+                if (d.user_id) {
+                    localStorage.setItem("user_id", String(d.user_id));
+                }
+            });
+
+    </script>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById("mobileMenu");
+            menu.classList.toggle("hidden");
+        }
+    </script>
 
 
 </body>
+
 </html>
