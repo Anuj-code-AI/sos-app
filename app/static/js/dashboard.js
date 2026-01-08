@@ -85,17 +85,6 @@ function showAlert(data) {
 // 🔴 Sender sends SOS
 function sendHarassment() {
     getLocation((lat, lng) => {
-
-        // Show sender map
-        const mapDiv = document.getElementById("sender-map");
-        mapDiv.classList.remove("hidden");
-
-        senderMap = L.map("sender-map").setView([lat, lng], 15);
-
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(senderMap);
-
-        L.marker([lat, lng]).addTo(senderMap).bindPopup("You are here").openPopup();
-
         fetch("/alert/harassment", {
             method: "POST",
             credentials: "include",
@@ -110,24 +99,29 @@ function showHelpAcceptedMessage(message) {
     if (!container) return;
 
     const msgBox = document.createElement("div");
-    msgBox.className = "bg-green-100 border-l-4 border-green-500 p-5 rounded-xl shadow-xl";
+    const mapId = "sender-map-" + Date.now();
+
+    msgBox.className = "bg-green-100 border-l-4 border-green-500 p-5 rounded-xl shadow-xl space-y-3";
 
     msgBox.innerHTML = `
         <h3 class="text-lg font-bold text-green-700">✅ Help is on the way</h3>
         <p>${message}</p>
+        <div id="${mapId}" class="w-full h-[250px] rounded-xl overflow-hidden"></div>
     `;
 
     container.prepend(msgBox);
 
-    setTimeout(() => msgBox.remove(), 8000);
+    // Create map NOW (only after accepted)
+    setTimeout(() => {
+        senderMap = L.map(mapId).setView([0, 0], 15);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(senderMap);
+    }, 0);
 }
 
-// 🟢 Show helper moving on sender map
+
 function showHelperOnSenderMap(lat, lng) {
-    if (!senderMap) {
-        console.log("❌ senderMap not initialized");
-        return;
-    }
+    if (!senderMap) return;
 
     if (!helperMarker) {
         helperMarker = L.marker([lat, lng]).addTo(senderMap)
@@ -135,4 +129,6 @@ function showHelperOnSenderMap(lat, lng) {
     } else {
         helperMarker.setLatLng([lat, lng]);
     }
+
+    senderMap.setView([lat, lng], 15);
 }
