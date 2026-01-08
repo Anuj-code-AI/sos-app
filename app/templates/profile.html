@@ -1,27 +1,49 @@
-{% extends "base.html" %}
-{% block title %}Profile{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
-{% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
-{% endblock %}
+<div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
 
-{% block content %}
-<div class="profile-box">
-    <h2>Your Profile</h2>
+    <h2 class="text-2xl font-bold text-center mb-6">Your Profile</h2>
 
-    <form method="post">
-        <label>Name</label>
-        <input name="name" value="{{ user.name }}" required>
+    <form method="post" class="space-y-4">
 
-        <label>Email</label>
-        <input value="{{ user.email }}" disabled>
+        <div>
+            <label class="block text-sm font-semibold mb-1">Name</label>
+            <input name="name" placeholder="Your name"
+                   class="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+        </div>
 
-        <label>Address</label>
-        <input name="address" value="{{ user.address }}" required>
+        <div>
+            <label class="block text-sm font-semibold mb-1">Email</label>
+            <input placeholder="youremail@example.com" disabled
+                   class="w-full border rounded-lg p-2 bg-gray-100 text-gray-500">
+        </div>
 
-        <button type="submit">Save Changes</button>
+        <div>
+            <label class="block text-sm font-semibold mb-1">Address</label>
+            <input name="address" placeholder="Your address"
+                   class="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-red-600 transition">
+            Save Changes
+        </button>
+
     </form>
 
-    <a href="/dashboard" class="back">← Back to Dashboard</a>
+    <a href="/dashboard"
+       class="block text-center mt-6 text-red-600 font-semibold hover:underline">
+        ← Back to Dashboard
+    </a>
+
 </div>
-{% endblock %}
+
+</body>
+</html>

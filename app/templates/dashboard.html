@@ -1,36 +1,70 @@
-{% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>One-Stop SOS</title>
 
-{% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-{% endblock %}
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{% block content %}
-<h2 class="page-title">Emergency Services</h2>
-<p class="page-subtitle">Tap an option below in case of emergency</p>
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<div id="alert-container"></div>
+    <!-- Socket -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body class="bg-gray-100">
 
-<div class="dashboard-top">
-    <a href="/profile" class="profile-btn">👤 Profile</a>
-</div>
+<header class="bg-red-500 text-white text-center p-4 text-xl font-bold">
+    One-Stop SOS
+</header>
 
+<div id="alert-container" class="fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl z-50"></div>
 
-<div class="grid">
-    <button class="card danger" onclick="sendHarassment()">🚨 Harassment</button>
-    <button class="card electrician">💡 Electrician</button>
-    <button class="card police">👮 Police</button>
-    <button class="card fireturck">🚒 Fire Truck</button>
-    <button class="card ambulance">🚑 Ambulance</button>
-    <button class="card">🚰 Plumber</button>
-    <button class="card mechanic">🔧 Mechanic</button>
-</div>
-{% endblock %}
+<main class="p-6">
 
-{% block js %}
+    <h2 class="text-center text-2xl font-bold mb-8">Emergency Services</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+
+        <button onclick="sendHarassment()" class="h-40 rounded-2xl bg-red-500 text-white text-xl font-semibold shadow hover:scale-105 transition">
+            🚨 Harassment
+        </button>
+
+        <button class="h-40 rounded-2xl bg-blue-700 text-white text-xl font-semibold shadow hover:scale-105 transition">
+            👮 Police
+        </button>
+
+        <button class="h-40 rounded-2xl bg-green-600 text-white text-xl font-semibold shadow hover:scale-105 transition">
+            🚑 Ambulance
+        </button>
+
+        <button class="h-40 rounded-2xl bg-yellow-500 text-black text-xl font-semibold shadow hover:scale-105 transition">
+            ⚡ Electrician
+        </button>
+
+        <button class="h-40 rounded-2xl bg-pink-600 text-white text-xl font-semibold shadow hover:scale-105 transition">
+            🔧 Mechanic
+        </button>
+
+        <button class="h-40 rounded-2xl bg-indigo-500 text-white text-xl font-semibold shadow hover:scale-105 transition">
+            🚰 Plumber
+        </button>
+
+    </div>
+
+</main>
+
+<!-- Your existing JS -->
+<script src="/static/js/location.js"></script>
+<script src="/static/js/dashboard.js"></script>
+
 <script>
-    localStorage.setItem("user_id", "{{ session['user_id'] }}");
+    // TEMP: for now store manually
+    if (!localStorage.getItem("user_id")) {
+        localStorage.setItem("user_id", "demo_user_123");
+    }
 </script>
-<script src="{{ url_for('static', filename='js/location.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-{% endblock %}
+
+</body>
+</html>

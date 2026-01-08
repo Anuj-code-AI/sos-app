@@ -1,15 +1,16 @@
-{% extends "base.html" %}
-{% block title %}Emergency Alert{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alert</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
 
-{% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/alerts.css') }}">
-{% endblock %}
-
-{% block content %}
-<div class="alert-box">
-    <h3>🚨 Emergency Alert</h3>
+<div class="max-w-xl mx-auto bg-yellow-100 border-l-4 border-red-500 p-6 rounded-lg">
+    <h3 class="text-xl font-bold mb-2">🚨 Emergency Alert</h3>
     <p id="alertMessage"></p>
     <p id="alertLocation"></p>
-    <a class="back-btn" href="/dashboard">← Back to Dashboard</a>
 </div>
-{% endblock %}
+
+</body>
+</html>
