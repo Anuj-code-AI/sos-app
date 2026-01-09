@@ -46,11 +46,12 @@ async function sayTyped(actor, text) {
 }
 async function sayTypedforPolice(actor, text) {
     const bubble = document.createElement("div");
-    bubble.className = "demo-bubble absolute -top-28 left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[85vw] sm:max-w-md whitespace-pre-wrap";
+    bubble.className = "demo-bubble fixed bottom-[30%] left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[85vw] sm:max-w-md whitespace-pre-wrap z-[9999]";
     bubble.textContent = "";
 
     actor.style.position = "fixed";
-    actor.appendChild(bubble);
+    document.body.appendChild(bubble);
+
 
     for (let i = 0; i < text.length; i++) {
         bubble.textContent += text[i];
@@ -180,7 +181,7 @@ async function startDemo() {
     people.style.opacity = "1";
     people.style.transform = "translate(-50%, -50%) scale(1)";
 
-    await sleep(5000);
+    await sleep(3000);
     people.remove();
 
     // Aditi
@@ -196,12 +197,25 @@ async function startDemo() {
     unhighlightHarassmentButton();
 
     // Responders
-    const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 20);
-    const police = createActor(
-        "/static/images/police.png",
-        "top-[-50vh] right-[-40vw]",   // start completely outside from right
-        25
-    );
+    // Responders
+    const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 22);
+    const police = createActor("/static/images/police.png", "top-[-50vh] right-[-40vw]", 25);
+
+    // Animate helper in
+    await sleep(100);
+    help1.style.bottom = "1rem";
+    await sayTyped(help1, "I am near. I am coming to help!");
+
+    // Animate police in
+    police.style.top = "1rem";
+    police.style.right = "1rem";
+    await sayTyped(police, "Police is on the way!");
+
+    showDemoMap();
+
+    help1.remove();
+    police.remove();
+
 
     // animate in
     await sleep(100);
@@ -226,20 +240,18 @@ async function startDemo() {
 
     await showPanicCard("🚨 GAS LEAK NEAR FACTORY! Use mask and move to EAST HIGHWAY immediately!");
 
-    clearScene();
+    police1.remove();
 
     // Evacuation
     const people2 = createActor(
         "/static/images/people2.png",
-        "bottom-[-60vh] left-[-70vw]",  // start far outside left
+        "bottom-[-60vh] left-0",
         60
     );
 
-    // slide in to left side
     await sleep(100);
     people2.style.bottom = "1rem";
-    people2.style.left = "0.5rem";     // stick to extreme left
-
+    people2.style.left = "0";
 
     await sayTyped(people2, "Follow the directions. Move to the safe highway.");
 
