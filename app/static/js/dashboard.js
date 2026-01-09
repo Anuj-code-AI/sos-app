@@ -1,10 +1,38 @@
-const socket = io({
-    query: { user_id: String(localStorage.getItem("user_id")) }
+// ================= SOCKET SETUP =================
+
+const socket = io("https://sos-app-3.onrender.com", {
+    withCredentials: true
 });
 
 // Sender map & helper marker
 let senderMap = null;
 let helperMarker = null;
+let geoWatchId = null;
+
+// Get current user id from session
+async function getMyUserId() {
+    const res = await fetch("/api/me", { credentials: "include" });
+    const data = await res.json();
+    return String(data.user_id);
+}
+
+// Register user after socket connect
+socket.on("connect", async () => {
+    const userId = await getMyUserId();
+
+    console.log("🟢 SOCKET CONNECTED, REGISTERING USER:", userId);
+
+    if (!userId || userId === "null") {
+        console.error("❌ USER NOT LOGGED IN, SOCKET NOT REGISTERED");
+        return;
+    }
+
+    socket.emit("register_user", {
+        user_id: userId
+    });
+});
+
+// ================= SOCKET LISTENERS =================
 
 socket.on("new_alert", data => {
     showAlert(data);
@@ -19,6 +47,8 @@ socket.on("helper_location", data => {
     console.log("✅ RECEIVED HELPER LOCATION:", data);
     showHelperOnSenderMap(data.lat, data.lng);
 });
+
+// ================= UI FUNCTIONS =================
 
 function showAlert(data) {
     const container = document.getElementById("alert-container");
@@ -54,18 +84,17 @@ function showAlert(data) {
     alertBox.querySelector(".accept-btn").onclick = () => {
         console.log("👉 HELP ACCEPTED FOR SENDER:", data.sender_id);
 
-        // 1️⃣ Emit help accepted
         socket.emit("help_accepted", {
             sender_id: String(data.sender_id)
         });
 
-        // 2️⃣ Auto-open Google Maps navigation
-        const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}`;
-        window.open(mapsUrl, "_blank");
-
-        // 3️⃣ Start sending helper live location
+        // Start sending helper live location
         if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(pos => {
+            if (geoWatchId !== null) {
+                navigator.geolocation.clearWatch(geoWatchId);
+            }
+
+            geoWatchId = navigator.geolocation.watchPosition(pos => {
                 socket.emit("helper_location_update", {
                     sender_id: String(data.sender_id),
                     lat: pos.coords.latitude,
@@ -74,7 +103,6 @@ function showAlert(data) {
             });
         }
     };
-
 
     container.prepend(alertBox);
 
@@ -114,7 +142,6 @@ function showHelpAcceptedMessage(message) {
     msgBox.className = "relative bg-green-100 border-l-4 border-green-500 p-5 rounded-xl shadow-xl space-y-3";
 
     msgBox.innerHTML = `
-        <!-- Close Button -->
         <button class="absolute top-2 right-2 text-gray-600 hover:text-black text-xl font-bold">
             ✖
         </button>
@@ -124,22 +151,18 @@ function showHelpAcceptedMessage(message) {
         <div id="${mapId}" class="w-full h-[250px] rounded-xl overflow-hidden"></div>
     `;
 
-    // Close handler
     msgBox.querySelector("button").onclick = () => {
         msgBox.remove();
     };
 
     container.prepend(msgBox);
 
-    // Create map NOW (only after accepted)
     setTimeout(() => {
         senderMap = L.map(mapId).setView([0, 0], 15);
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(senderMap);
     }, 0);
 }
-
-
 
 function showHelperOnSenderMap(lat, lng) {
     if (!senderMap) return;
@@ -153,6 +176,8 @@ function showHelperOnSenderMap(lat, lng) {
 
     senderMap.setView([lat, lng], 15);
 }
+
+// ================= CONFIRM UI =================
 
 function openConfirmHarassment() {
     const container = document.getElementById("alert-container");
@@ -171,7 +196,7 @@ function openConfirmHarassment() {
         <textarea id="custom-alert-message"
                   class="w-full border rounded-lg p-2"
                   rows="3"
-                  placeholder="Optional: Add more details (e.g. I am near bus stand, red shirt...)"></textarea>
+                  placeholder="Optional: Add more details..."></textarea>
 
         <div class="flex gap-3 pt-2">
             <button id="confirmSendBtn"
@@ -187,12 +212,8 @@ function openConfirmHarassment() {
 
     container.prepend(box);
 
-    // Cancel
-    box.querySelector("#cancelSendBtn").onclick = () => {
-        box.remove();
-    };
+    box.querySelector("#cancelSendBtn").onclick = () => box.remove();
 
-    // Confirm
     box.querySelector("#confirmSendBtn").onclick = () => {
         const msg = box.querySelector("#custom-alert-message").value;
         box.remove();

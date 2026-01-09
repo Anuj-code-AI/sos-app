@@ -1,20 +1,26 @@
-from flask import request
+from flask import request,session
 from flask_socketio import emit
 from app.socket import socketio
 
 connected_users = {}  # user_id (str) -> socket_id
 
 
+
 @socketio.on("connect")
 def handle_connect():
-    user_id = request.args.get("user_id")
+    print("🟢 SOCKET CONNECTED:", request.sid)
+
+@socketio.on("register_user")
+def register_user(data):
+    user_id = str(data.get("user_id"))
 
     if not user_id or user_id == "null":
-        print("❌ REJECTED SOCKET WITH INVALID USER")
-        return False   # reject connection
+        print("❌ INVALID REGISTER USER")
+        return
 
-    user_id = str(user_id)
     connected_users[user_id] = request.sid
+    print("🟢 USER REGISTERED:", user_id, "=>", request.sid)
+    print("CONNECTED USERS:", connected_users)
 
 
 @socketio.on("disconnect")
