@@ -233,19 +233,7 @@
 
 
     <!-- JS -->
-    <script src="/static/js/location.js"></script>
-    <script src="/static/js/dashboard.js"></script>
-
-    <script>
-        fetch("/api/me")
-            .then(r => r.json())
-            .then(d => {
-                if (d.user_id) {
-                    localStorage.setItem("user_id", String(d.user_id));
-                }
-            });
-
-    </script>
+    <script src="/static/js/demo.js"></script>
 
     <script>
         function toggleMobileMenu() {
