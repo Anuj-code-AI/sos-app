@@ -3,7 +3,6 @@ from app.services.profile_service import ProfileService
 from flask import send_from_directory, jsonify
 
 profile_bp = Blueprint("profile", __name__)
-print("🔥🔥🔥 NEW PROFILE CONTROLLER LOADED FROM UI-ONLY BRANCH 🔥🔥🔥")
 
 # Serve profile page
 @profile_bp.route("/profile", methods=["GET"])

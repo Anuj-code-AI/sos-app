@@ -15,8 +15,7 @@ def handle_connect():
 
     user_id = str(user_id)
     connected_users[user_id] = request.sid
-    print("✅ USER CONNECTED:", user_id)
-    print("CONNECTED USERS:", connected_users)
+
 
 @socketio.on("disconnect")
 def handle_disconnect():

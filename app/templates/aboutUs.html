@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>About ResQnet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- HEADER -->
+    <header class="bg-red-500 text-white p-4 flex justify-between items-center shadow-md">
+
+        <!-- Logo -->
+        <a href="/dashboard" class="flex items-center gap-2 font-bold text-lg">
+            <img src="/static/images/logo.png" class="h-8 w-8">
+            ResQnet
+        </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden sm:flex gap-4 items-center">
+            <a href="/dashboard" class="hover:underline">Dashboard</a>
+            <a href="/profile" class="hover:underline">Profile</a>
+            <a href="/logout" onclick="localStorage.clear()" class="font-semibold">Logout</a>
+        </div>
+
+        <!-- Mobile Hamburger -->
+        <button class="sm:hidden text-2xl" onclick="toggleMobileMenu()">☰</button>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden bg-white shadow-md border-b">
+        <a href="/dashboard" class="block px-4 py-3 border-b">Dashboard</a>
+        <a href="/profile" class="block px-4 py-3 border-b">Profile</a>
+        <a href="/logout" onclick="localStorage.clear()" class="block px-4 py-3">Logout</a>
+    </div>
+
+
+
+
+    <!-- HERO -->
+    <section class="bg-white py-16">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+                About <span class="text-red-500">ResQnet</span>
+            </h1>
+            <p class="text-gray-600 text-lg">
+                A smart, real-time SOS and community alert system built to reduce emergency response time and save
+                lives.
+            </p>
+        </div>
+    </section>
+
+    <!-- MISSION -->
+    <section class="py-16">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6">🎯 Our Mission</h2>
+            <p class="text-gray-700 text-lg">
+                In emergencies, every second matters. ResQnet was built to solve one critical problem:
+                <span class="font-semibold">help reaches people too late.</span>
+                <br><br>
+                Instead of relying only on police numbers or personal contacts, ResQnet creates a
+                <span class="font-semibold">real-time, location-based safety network</span> where nearby people and
+                responders can act immediately.
+            </p>
+        </div>
+    </section>
+
+    <!-- WHY RESQNET -->
+    <section class="bg-white py-16">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-10">💡 Why ResQnet?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 rounded-xl shadow text-center">
+                    <h3 class="text-xl font-bold mb-2">⚡ Faster Than Calls</h3>
+                    <p class="text-gray-600">One tap sends alerts to multiple people nearby instantly.</p>
+                </div>
+
+                <div class="p-6 rounded-xl shadow text-center">
+                    <h3 class="text-xl font-bold mb-2">📍 Location Based</h3>
+                    <p class="text-gray-600">Only people near you are notified, not the whole city.</p>
+                </div>
+
+                <div class="p-6 rounded-xl shadow text-center">
+                    <h3 class="text-xl font-bold mb-2">🛡️ Community First</h3>
+                    <p class="text-gray-600">Nearby citizens can respond even before authorities arrive.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="py-16">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">👥 Meet The Team</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+
+                <!-- Member 1 -->
+                <div class="bg-white p-6 rounded-xl shadow text-center">
+                    <img src="/static/images/anuj.jpg" class="w-28 h-28 mx-auto rounded-full mb-4 object-cover">
+                    <h3 class="text-xl font-bold">Anuj Chourasiya</h3>
+                    <p class="text-red-500 font-semibold">Core Developer & System Designer</p>
+                    <p class="text-gray-600 text-sm mt-2">
+                        Worked on the main system design and development including backend, frontend,
+                        real-time alert system, and overall integration of ResQnet.
+                    </p>
+                </div>
+
+                <!-- Member 2 -->
+                <div class="bg-white p-6 rounded-xl shadow text-center">
+                    <img src="/static/images/atul.jpg" class="w-28 h-28 mx-auto rounded-full mb-4 object-cover">
+                    <h3 class="text-xl font-bold">Atul Mali</h3>
+                    <p class="text-red-500 font-semibold">Co-Developer & UI Support</p>
+                    <p class="text-gray-600 text-sm mt-2">
+                        Contributed to UI improvements, provided technical input, and assisted in
+                        debugging and feature refinement of the system.
+                    </p>
+                </div>
+
+
+                <!-- Member 3 -->
+                <div class="bg-white p-6 rounded-xl shadow text-center">
+                    <img src="/static/images/common.jpg" class="w-28 h-28 mx-auto rounded-full mb-4 object-cover">
+                    <h3 class="text-xl font-bold">Ayushi Dixit</h3>
+                    <p class="text-red-500 font-semibold">Presentation & Documentation</p>
+                    <p class="text-gray-600 text-sm mt-2">
+                        Worked on project presentation (PPT), documentation, and overall explanation flow
+                        for demos and judging.
+                    </p>
+                </div>
+
+                <!-- Member 4 -->
+                <div class="bg-white p-6 rounded-xl shadow text-center">
+                    <img src="/static/images/common.jpg" class="w-28 h-28 mx-auto rounded-full mb-4 object-cover">
+                    <h3 class="text-xl font-bold">Aashka Gupta</h3>
+                    <p class="text-red-500 font-semibold">Video & Media</p>
+                    <p class="text-gray-600 text-sm mt-2">
+                        Created the project video, demo recording, and handled visual presentation of the
+                        idea and working system.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="mt-16 bg-gray-900 text-gray-300">
+        <div class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+            <!-- App Info -->
+            <div>
+                <h3 class="text-white text-lg font-bold mb-2">ResQnet 🚨</h3>
+                <p class="text-sm">
+                    A smart SOS and community alert system to get help faster in emergencies.
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h4 class="text-white font-semibold mb-2">Quick Links</h4>
+                <ul class="space-y-1 text-sm">
+                    <li><a href="/dashboard" class="hover:text-white">Dashboard</a></li>
+                    <li><a href="/profile" class="hover:text-white">Profile</a></li>
+                    <li><a href="/aboutUs" class="hover:text-white">About Us</a></li>
+                    <li><a href="/logout" class="hover:text-white">Logout</a></li>
+                </ul>
+            </div>
+
+            <!-- Credits -->
+            <div>
+                <h4 class="text-white font-semibold mb-2">Project</h4>
+                <p class="text-sm">
+                    Built for Hackathon 2026<br>
+                    By Team The HiveMinds
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-gray-700 text-center py-3 text-sm text-gray-400">
+            © 2026 ResQnet. All rights reserved.
+        </div>
+    </footer>
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById("mobileMenu");
+            menu.classList.toggle("hidden");
+        }
+    </script>
+</body>
+
+</html>

@@ -36,6 +36,10 @@ def logout():
 def register_page():
     return send_from_directory('templates', 'register.html')
 
+@auth_bp.route("/aboutUs", methods=["GET"])
+def about_us_page():
+    return send_from_directory('templates', 'aboutUs.html')
+
 @auth_bp.route("/register", methods=["POST"])
 def register():
     name = request.form["name"]

@@ -54,11 +54,16 @@ function showAlert(data) {
     alertBox.querySelector(".accept-btn").onclick = () => {
         console.log("👉 HELP ACCEPTED FOR SENDER:", data.sender_id);
 
+        // 1️⃣ Emit help accepted
         socket.emit("help_accepted", {
             sender_id: String(data.sender_id)
         });
 
-        // Start sending helper live location
+        // 2️⃣ Auto-open Google Maps navigation
+        const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}`;
+        window.open(mapsUrl, "_blank");
+
+        // 3️⃣ Start sending helper live location
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(pos => {
                 socket.emit("helper_location_update", {
@@ -69,6 +74,7 @@ function showAlert(data) {
             });
         }
     };
+
 
     container.prepend(alertBox);
 

@@ -32,7 +32,11 @@
 
 
         <!-- Desktop Buttons -->
-        <div class="hidden sm:flex gap-3">
+        <div class="hidden sm:flex gap-3 items-center">
+            <a href="/aboutUs" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold shadow">
+                ℹ️ About Us
+            </a>
+
             <a href="/profile" class="bg-white text-red-500 px-4 py-2 rounded-lg font-semibold shadow">
                 👤 Profile
             </a>
@@ -42,12 +46,14 @@
             </a>
         </div>
 
+
         <!-- Mobile Hamburger -->
         <button class="sm:hidden text-2xl" onclick="toggleMobileMenu()">☰</button>
     </header>
 
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="hidden bg-white shadow-md border-b">
+        <a href="/aboutUs" class="block px-4 py-3 border-b">ℹ️ About Us</a>
         <a href="/profile" class="block px-4 py-3 border-b">👤 Profile</a>
         <a href="/logout" onclick="localStorage.clear()" class="block px-4 py-3">🚪 Logout</a>
     </div>
@@ -60,8 +66,38 @@
 
     <!-- MAIN -->
     <main class="p-6">
+        <!-- HERO SECTION -->
+        <section class="max-w-6xl mx-auto mb-16 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-gray-800">
+                    Your Safety. Your Network. <span class="text-red-500">ResQnet.</span>
+                </h1>
+                <p class="text-gray-600 text-lg mb-6">
+                    ResQnet is a smart, real-time SOS and community alert system that connects people to nearby help in
+                    seconds.
+                    Whether it's harassment, medical emergency, or danger — help is one tap away.
+                </p>
 
-        <h2 class="text-center text-2xl font-bold mb-8">Emergency Services</h2>
+                <div class="flex gap-4">
+                    <a href="#services"
+                        class="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-red-600 transition">
+                        🚨 Use Emergency Services
+                    </a>
+                    <a href="#about"
+                        class="border border-red-500 text-red-500 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <img src="/static/images/hero-sos.png" alt="Emergency Help" class="max-w-md w-full drop-shadow-xl">
+            </div>
+        </section>
+
+
+        <h2 id="services" class="text-center text-2xl font-bold mb-8">Emergency Services</h2>
+
 
         <!-- GRID -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -100,6 +136,64 @@
 
 
     </main>
+    <!-- ABOUT SECTION -->
+    <section id="about" class="bg-white py-16">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-4">About ResQnet</h2>
+            <p class="text-gray-600 text-lg mb-8">
+                ResQnet is built to solve one critical problem: delays in getting help during emergencies.
+                Instead of relying only on police numbers or personal contacts, ResQnet creates a real-time,
+                location-based safety network of nearby people and services.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 rounded-xl shadow">
+                    <h3 class="font-bold text-lg mb-2">⚡ Fast Alerts</h3>
+                    <p class="text-gray-600">Instant alerts to nearby users and responders.</p>
+                </div>
+                <div class="p-6 rounded-xl shadow">
+                    <h3 class="font-bold text-lg mb-2">📍 Location Based</h3>
+                    <p class="text-gray-600">Only people near you get notified — not the whole city.</p>
+                </div>
+                <div class="p-6 rounded-xl shadow">
+                    <h3 class="font-bold text-lg mb-2">🛡️ Community Driven</h3>
+                    <p class="text-gray-600">Citizens helping citizens before authorities arrive.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- FAQ SECTION -->
+    <section class="bg-gray-100 py-16">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-10">Frequently Asked Questions</h2>
+
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-lg shadow">
+                    <h3 class="font-semibold">Who receives my alert?</h3>
+                    <p class="text-gray-600 mt-2">Nearby active users and relevant responders depending on the emergency
+                        type.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-lg shadow">
+                    <h3 class="font-semibold">Is my location always tracked?</h3>
+                    <p class="text-gray-600 mt-2">No. Your location is only used when you trigger an SOS.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-lg shadow">
+                    <h3 class="font-semibold">Can I misuse the system?</h3>
+                    <p class="text-gray-600 mt-2">Misuse is logged and can lead to account suspension.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-lg shadow">
+                    <h3 class="font-semibold">Is this connected to police directly?</h3>
+                    <p class="text-gray-600 mt-2">Currently community-first, with authority escalation in controlled
+                        scenarios.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     <footer class="mt-16 bg-gray-900 text-gray-300">
         <div class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
@@ -117,6 +211,7 @@
                 <ul class="space-y-1 text-sm">
                     <li><a href="/dashboard" class="hover:text-white">Dashboard</a></li>
                     <li><a href="/profile" class="hover:text-white">Profile</a></li>
+                    <li><a href="/aboutUs" class="hover:text-white">About Us</a></li>
                     <li><a href="/logout" class="hover:text-white">Logout</a></li>
                 </ul>
             </div>
