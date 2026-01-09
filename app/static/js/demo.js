@@ -1,6 +1,5 @@
 // ======================================================
-// ResQnet DEMO — Story Mode (Cinematic, Slow, Click Based)
-// Uses REAL transparent PNGs (no card wrappers)
+// ResQnet DEMO — Story Mode (Stable, Cinematic, Click Based)
 // ======================================================
 
 // ----------------- Helpers -----------------
@@ -9,11 +8,22 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function waitForUserClick(el = document.body) {
+    return new Promise(resolve => {
+        function handler() {
+            el.removeEventListener("click", handler);
+            resolve();
+        }
+        setTimeout(() => el.addEventListener("click", handler), 100);
+    });
+}
+
 function clearScene() {
     document.querySelectorAll(".demo-actor, .demo-bubble, .demo-overlay, .demo-panic, .demo-mapbox").forEach(e => e.remove());
 }
 
-// Create character (NO card, pure image)
+// ----------------- Actor -----------------
+
 function createActor(imgSrc, positionClass, sizeVW = 25) {
     const img = document.createElement("img");
     img.src = imgSrc;
@@ -25,42 +35,31 @@ function createActor(imgSrc, positionClass, sizeVW = 25) {
     return img;
 }
 
-// Typed message bubble
+// ----------------- Message Bubble (ALWAYS VISIBLE) -----------------
+
 async function sayTyped(actor, text) {
     const bubble = document.createElement("div");
-    bubble.className = "demo-bubble absolute -top-28 left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[85vw] sm:max-w-md whitespace-pre-wrap";
-    bubble.textContent = "";
+    bubble.className = `
+        demo-bubble fixed bottom-[35%] left-1/2 -translate-x-1/2
+        bg-white p-4 rounded-xl shadow-xl
+        text-base sm:text-lg max-w-[85vw] sm:max-w-md
+        whitespace-pre-wrap z-[99999]
+    `;
 
-    actor.style.position = "fixed";
-    actor.appendChild(bubble);
+    bubble.textContent = "";
+    document.body.appendChild(bubble);
 
     for (let i = 0; i < text.length; i++) {
         bubble.textContent += text[i];
         await sleep(30);
     }
 
-    // Wait for user click
-    await waitForUserClick();
-
+    await waitForUserClick();   // click anywhere
     bubble.remove();
 }
-async function sayTypedforPolice(actor, text) {
-    const bubble = document.createElement("div");
-    bubble.className = "demo-bubble absolute -top-28 left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[85vw] sm:max-w-md whitespace-pre-wrap";
-    bubble.textContent = "";
 
-    actor.style.position = "fixed";
-    actor.appendChild(bubble);
+// ----------------- Overlay -----------------
 
-    for (let i = 0; i < text.length; i++) {
-        bubble.textContent += text[i];
-        await sleep(30);
-    }
-    await sleep(2000);
-
-    bubble.remove();
-}
-// Fullscreen overlay with Continue button
 function showOverlay(text) {
     return new Promise(resolve => {
         const overlay = document.createElement("div");
@@ -68,41 +67,36 @@ function showOverlay(text) {
         overlay.innerHTML = `
             <div class="bg-white p-6 rounded-xl max-w-md w-full text-center space-y-4 shadow-2xl">
                 <p class="text-lg font-semibold">${text}</p>
-                <button class="bg-red-500 text-white px-6 py-2 rounded-lg font-bold w-full">Continue →</button>
+                <div class="text-sm text-gray-500">Tap anywhere to continue</div>
             </div>
         `;
         document.body.appendChild(overlay);
 
-        overlay.querySelector("button").onclick = () => {
+        overlay.onclick = () => {
             overlay.remove();
             resolve();
         };
     });
 }
 
-// Wait for click anywhere
-function waitForUserClick(el = document.body) {
-    return new Promise(resolve => {
-        function handler() {
-            el.removeEventListener("click", handler);
-            resolve();
-        }
-        setTimeout(() => el.addEventListener("click", handler), 100);
-    });
-}
+// ----------------- Panic Card -----------------
 
-// Highlight harassment button
-function highlightHarassmentButton() {
-    const btn = document.querySelector("button[onclick='openConfirmHarassment()']");
-    if (!btn) return null;
-    btn.classList.add("ring-4", "ring-yellow-400", "animate-pulse");
-    return btn;
-}
+async function showPanicCard(text) {
+    const card = document.createElement("div");
+    card.className = "demo-panic fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white p-6 rounded-xl shadow-2xl text-lg sm:text-2xl font-bold z-[9999] text-center max-w-[90vw]";
+    card.innerText = text;
+    document.body.appendChild(card);
 
-function unhighlightHarassmentButton() {
-    const btn = document.querySelector("button[onclick='openConfirmHarassment()']");
-    if (!btn) return;
-    btn.classList.remove("ring-4", "ring-yellow-400", "animate-pulse");
+    card.animate(
+        [
+            { transform: "translate(-50%, -50%) translateX(-6px)" },
+            { transform: "translate(-50%, -50%) translateX(6px)" }
+        ],
+        { duration: 90, iterations: 40 }
+    );
+
+    await waitForUserClick();
+    card.remove();
 }
 
 // ----------------- Map -----------------
@@ -137,23 +131,19 @@ function showDemoMap() {
     }, 300);
 }
 
-// Panic card
-async function showPanicCard(text) {
-    const card = document.createElement("div");
-    card.className = "demo-panic fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white p-6 rounded-xl shadow-2xl text-lg sm:text-2xl font-bold z-[9999] text-center max-w-[90vw]";
-    card.innerText = text;
-    document.body.appendChild(card);
+// ----------------- Highlight Button -----------------
 
-    card.animate(
-        [
-            { transform: "translate(-50%, -50%) translateX(-6px)" },
-            { transform: "translate(-50%, -50%) translateX(6px)" }
-        ],
-        { duration: 90, iterations: 40 }
-    );
+function highlightHarassmentButton() {
+    const btn = document.querySelector("button[onclick='openConfirmHarassment()']");
+    if (!btn) return null;
+    btn.classList.add("ring-4", "ring-yellow-400", "animate-pulse");
+    return btn;
+}
 
-    await waitForUserClick();
-    card.remove();
+function unhighlightHarassmentButton() {
+    const btn = document.querySelector("button[onclick='openConfirmHarassment()']");
+    if (!btn) return;
+    btn.classList.remove("ring-4", "ring-yellow-400", "animate-pulse");
 }
 
 // ----------------- STORY -----------------
@@ -168,15 +158,13 @@ async function startDemo() {
     await sayTyped(goblin, "Hi! I will show you how ResQnet helps people in emergencies.");
     goblin.remove();
 
-    // People
-    const people = createActor("/static/images/people.png", "bottom-1/2 left-1/2 -translate-x-1/2", 60);
-    await sleep(500);
-    people.style.bottom = "1rem";
+    // People (center)
+    const people = createActor("/static/images/people.png", "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2", 40);
     await sleep(2000);
     people.remove();
 
     // Aditi
-    const aditi = createActor("/static/images/aditi.png", "bottom-[-40vh] left-4", 20);
+    const aditi = createActor("/static/images/aditi.png", "bottom-[-40vh] left-4", 22);
     await sleep(100);
     aditi.style.bottom = "1rem";
 
@@ -187,20 +175,14 @@ async function startDemo() {
     await waitForUserClick(btn || document.body);
     unhighlightHarassmentButton();
 
-    // Responders
-    const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 20);
-    const police = createActor(
-        "/static/images/police.png",
-        "top-[-50vh] right-[-40vw]",  // start completely outside screen
-        18                            // slightly smaller
-    );
+    // Helper + Police
+    const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 22);
+    const police = createActor("/static/images/police.png", "top-[-50vh] right-[-40vw]", 18);
 
     await sleep(100);
     help1.style.bottom = "1rem";
     await sayTyped(help1, "I am near. I am coming to help!");
 
-    // animate in
-    await sleep(100);
     police.style.top = "1rem";
     police.style.right = "1rem";
     await sayTyped(police, "Police is on the way!");
@@ -210,38 +192,28 @@ async function startDemo() {
     police.remove();
 
     await sayTyped(aditi, "Thank God... I am safe now. Thanks to ResQnet!");
-    await oneClick();
     aditi.remove();
 
-    // Gas leak
+    // Gas Leak
     const police1 = createActor("/static/images/police1.png", "top-[-45vh] right-10", 20);
     await sleep(100);
     police1.style.top = "1rem";
 
-
-
     await showPanicCard("🚨 GAS LEAK NEAR FACTORY! Use mask and move to EAST HIGHWAY immediately!");
-
-    showPanicCard.remove();
     police1.remove();
 
-    // Evacuation
-    const people2 = createActor(
-        "/static/images/people2.png",
-        "bottom-[-60vh] left-0",
-        60
-    );
+    clearScene();
 
+    // Evacuation Crowd (LEFT, BIG)
+    const people2 = createActor("/static/images/people2.png", "bottom-[-60vh] left-0", 60);
     await sleep(100);
     people2.style.bottom = "1rem";
-    people2.style.left = "0.5rem";   // stick to left side
-
+    people2.style.left = "0";
 
     await sayTyped(people2, "Follow the directions. Move to the safe highway.");
-
     showDemoMap();
 
-    await oneClick();
+    await waitForUserClick();
     clearScene();
 
     await showOverlay("🎉 This concludes the demo. In real life, all of this happens with real people in real time.");
@@ -251,4 +223,4 @@ async function startDemo() {
 
 window.onload = () => {
     startDemo();
-};  
+};
