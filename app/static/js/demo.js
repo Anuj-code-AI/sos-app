@@ -1,5 +1,6 @@
 // ======================================================
 // ResQnet DEMO — Story Mode (Cinematic, Slow, Click Based)
+// Uses REAL transparent PNGs (no card wrappers)
 // ======================================================
 
 // ----------------- Helpers -----------------
@@ -12,41 +13,34 @@ function clearScene() {
     document.querySelectorAll(".demo-actor, .demo-bubble, .demo-overlay, .demo-panic, .demo-mapbox").forEach(e => e.remove());
 }
 
-// Create character with big size and white card background (to hide bad PNG backgrounds)
+// Create character (NO card, pure image)
 function createActor(imgSrc, positionClass, sizeVW = 25) {
-    const wrapper = document.createElement("div");
-    wrapper.className = `demo-actor fixed z-[9000] transition-all duration-700 ease-out ${positionClass}`;
-    wrapper.style.width = sizeVW + "vw";
-    wrapper.style.maxWidth = "320px";
-
-    const card = document.createElement("div");
-    card.className = "bg-white rounded-2xl shadow-2xl p-2";
-
     const img = document.createElement("img");
     img.src = imgSrc;
-    img.className = "w-full h-auto block";
-
-    card.appendChild(img);
-    wrapper.appendChild(card);
-    document.body.appendChild(wrapper);
-
-    return wrapper;
+    img.className = `demo-actor fixed z-[9000] transition-all duration-700 ease-out drop-shadow-2xl ${positionClass}`;
+    img.style.width = sizeVW + "vw";
+    img.style.maxWidth = "420px";
+    img.style.height = "auto";
+    document.body.appendChild(img);
+    return img;
 }
 
 // Typed message bubble
 async function sayTyped(actor, text) {
     const bubble = document.createElement("div");
-    bubble.className = "demo-bubble absolute -top-28 left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[80vw] sm:max-w-md";
-    bubble.innerText = "";
+    bubble.className = "demo-bubble absolute -top-28 left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[85vw] sm:max-w-md whitespace-pre-wrap";
+    bubble.textContent = "";
+
+    actor.style.position = "fixed";
     actor.appendChild(bubble);
 
     for (let i = 0; i < text.length; i++) {
-        bubble.innerText += text[i];
+        bubble.textContent += text[i];
         await sleep(30);
     }
 
     // Wait for user click
-    await waitForUserClick(bubble);
+    await waitForUserClick();
 
     bubble.remove();
 }
@@ -137,10 +131,10 @@ async function showPanicCard(text) {
 
     card.animate(
         [
-            { transform: "translate(-50%, -50%) translateX(-5px)" },
-            { transform: "translate(-50%, -50%) translateX(5px)" }
+            { transform: "translate(-50%, -50%) translateX(-6px)" },
+            { transform: "translate(-50%, -50%) translateX(6px)" }
         ],
-        { duration: 100, iterations: 30 }
+        { duration: 90, iterations: 40 }
     );
 
     await waitForUserClick(card);
@@ -160,14 +154,14 @@ async function startDemo() {
     goblin.remove();
 
     // People
-    const people = createActor("/static/images/people.png", "bottom-[-40vh] left-1/2 -translate-x-1/2", 35);
-    await sleep(100);
+    const people = createActor("/static/images/people.png", "bottom-[-50vh] left-1/2 -translate-x-1/2", 60);
+    await sleep(500);
     people.style.bottom = "1rem";
     await sleep(2000);
     people.remove();
 
     // Aditi
-    const aditi = createActor("/static/images/aditi.png", "bottom-[-40vh] left-4", 28);
+    const aditi = createActor("/static/images/aditi.png", "bottom-[-40vh] left-4", 20);
     await sleep(100);
     aditi.style.bottom = "1rem";
 
@@ -179,16 +173,12 @@ async function startDemo() {
     unhighlightHarassmentButton();
 
     // Responders
-    const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 28);
-    const help2 = createActor("/static/images/help2.png", "top-1/2 right-[-40vw] -translate-y-1/2", 28);
-    const police = createActor("/static/images/police.png", "top-[-40vh] right-20", 28);
+    const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 20);
+    const police = createActor("/static/images/police.png", "top-[-45vh] right-15", 20);
 
     await sleep(100);
     help1.style.bottom = "1rem";
     await sayTyped(help1, "I am near. I am coming to help!");
-
-    help2.style.right = "1rem";
-    await sayTyped(help2, "I am also coming!");
 
     police.style.top = "1rem";
     await sayTyped(police, "Police is on the way!");
@@ -198,7 +188,7 @@ async function startDemo() {
     await sayTyped(aditi, "Thank God... I am safe now. Thanks to ResQnet!");
 
     // Gas leak
-    const police1 = createActor("/static/images/police1.png", "top-[-40vh] right-10", 28);
+    const police1 = createActor("/static/images/police1.png", "top-[-45vh] right-10", 20);
     await sleep(100);
     police1.style.top = "1rem";
 
