@@ -46,12 +46,11 @@ async function sayTyped(actor, text) {
 }
 async function sayTypedforPolice(actor, text) {
     const bubble = document.createElement("div");
-    bubble.className = "demo-bubble fixed bottom-[30%] left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[85vw] sm:max-w-md whitespace-pre-wrap z-[9999]";
+    bubble.className = "demo-bubble absolute -top-28 left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[85vw] sm:max-w-md whitespace-pre-wrap";
     bubble.textContent = "";
 
     actor.style.position = "fixed";
-    document.body.appendChild(bubble);
-
+    actor.appendChild(bubble);
 
     for (let i = 0; i < text.length; i++) {
         bubble.textContent += text[i];
@@ -170,18 +169,10 @@ async function startDemo() {
     goblin.remove();
 
     // People
-    const people = createActor(
-        "/static/images/people.png",
-        "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0",
-        40   // ~40% of screen (about 20% bigger than before visually)
-    );
-
-    // fade + scale in
-    await sleep(100);
-    people.style.opacity = "1";
-    people.style.transform = "translate(-50%, -50%) scale(1)";
-
-    await sleep(3000);
+    const people = createActor("/static/images/people.png", "bottom-1/2 left-1/2 -translate-x-1/2", 60);
+    await sleep(500);
+    people.style.bottom = "1rem";
+    await sleep(2000);
     people.remove();
 
     // Aditi
@@ -197,30 +188,19 @@ async function startDemo() {
     unhighlightHarassmentButton();
 
     // Responders
-    // Responders
-    const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 22);
-    const police = createActor("/static/images/police.png", "top-[-50vh] right-[-40vw]", 25);
+    const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 20);
+    const police = createActor(
+        "/static/images/police.png",
+        "top-[-50vh] right-[-40vw]",  // start completely outside screen
+        18                            // slightly smaller
+    );
 
-    // Animate helper in
     await sleep(100);
     help1.style.bottom = "1rem";
     await sayTyped(help1, "I am near. I am coming to help!");
 
-    // Animate police in
-    police.style.top = "1rem";
-    police.style.right = "1rem";
-    await sayTyped(police, "Police is on the way!");
-
-    showDemoMap();
-
-    help1.remove();
-    police.remove();
-
-
     // animate in
     await sleep(100);
-    await sayTyped(help1, "I am near. I am coming to help!");
-
     police.style.top = "1rem";
     police.style.right = "1rem";
     await sayTyped(police, "Police is on the way!");
@@ -238,8 +218,11 @@ async function startDemo() {
     await sleep(100);
     police1.style.top = "1rem";
 
+
+
     await showPanicCard("🚨 GAS LEAK NEAR FACTORY! Use mask and move to EAST HIGHWAY immediately!");
 
+    showPanicCard.remove();
     police1.remove();
 
     // Evacuation
@@ -251,7 +234,8 @@ async function startDemo() {
 
     await sleep(100);
     people2.style.bottom = "1rem";
-    people2.style.left = "0";
+    people2.style.left = "0.5rem";   // stick to left side
+
 
     await sayTyped(people2, "Follow the directions. Move to the safe highway.");
 
@@ -267,4 +251,4 @@ async function startDemo() {
 
 window.onload = () => {
     startDemo();
-};
+};  
