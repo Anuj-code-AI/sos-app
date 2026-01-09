@@ -44,7 +44,22 @@ async function sayTyped(actor, text) {
 
     bubble.remove();
 }
+async function sayTypedforPolice(actor, text) {
+    const bubble = document.createElement("div");
+    bubble.className = "demo-bubble absolute -top-28 left-1/2 -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-base sm:text-lg max-w-[85vw] sm:max-w-md whitespace-pre-wrap";
+    bubble.textContent = "";
 
+    actor.style.position = "fixed";
+    actor.appendChild(bubble);
+
+    for (let i = 0; i < text.length; i++) {
+        bubble.textContent += text[i];
+        await sleep(30);
+    }
+    await sleep(2000);
+
+    bubble.remove();
+}
 // Fullscreen overlay with Continue button
 function showOverlay(text) {
     return new Promise(resolve => {
@@ -137,7 +152,7 @@ async function showPanicCard(text) {
         { duration: 90, iterations: 40 }
     );
 
-    await waitForUserClick(card);
+    await waitForUserClick();
     card.remove();
 }
 
@@ -154,10 +169,18 @@ async function startDemo() {
     goblin.remove();
 
     // People
-    const people = createActor("/static/images/people.png", "bottom-[-50vh] left-1/2 -translate-x-1/2", 60);
-    await sleep(500);
-    people.style.bottom = "1rem";
-    await sleep(2000);
+    const people = createActor(
+        "/static/images/people.png",
+        "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0",
+        40   // ~40% of screen (about 20% bigger than before visually)
+    );
+
+    // fade + scale in
+    await sleep(100);
+    people.style.opacity = "1";
+    people.style.transform = "translate(-50%, -50%) scale(1)";
+
+    await sleep(5000);
     people.remove();
 
     // Aditi
@@ -174,18 +197,27 @@ async function startDemo() {
 
     // Responders
     const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 20);
-    const police = createActor("/static/images/police.png", "top-[-45vh] right-15", 20);
+    const police = createActor(
+        "/static/images/police.png",
+        "top-[-50vh] right-[-40vw]",   // start completely outside from right
+        25
+    );
 
+    // animate in
     await sleep(100);
-    help1.style.bottom = "1rem";
     await sayTyped(help1, "I am near. I am coming to help!");
 
     police.style.top = "1rem";
+    police.style.right = "1rem";
     await sayTyped(police, "Police is on the way!");
 
     showDemoMap();
+    help1.remove();
+    police.remove();
 
     await sayTyped(aditi, "Thank God... I am safe now. Thanks to ResQnet!");
+    await oneClick();
+    aditi.remove();
 
     // Gas leak
     const police1 = createActor("/static/images/police1.png", "top-[-45vh] right-10", 20);
@@ -197,13 +229,24 @@ async function startDemo() {
     clearScene();
 
     // Evacuation
-    const people2 = createActor("/static/images/people2.png", "bottom-[-60vh] left-1/2 -translate-x-1/2", 60);
+    const people2 = createActor(
+        "/static/images/people2.png",
+        "bottom-[-60vh] left-[-70vw]",  // start far outside left
+        60
+    );
+
+    // slide in to left side
     await sleep(100);
     people2.style.bottom = "1rem";
+    people2.style.left = "0.5rem";     // stick to extreme left
+
 
     await sayTyped(people2, "Follow the directions. Move to the safe highway.");
 
     showDemoMap();
+
+    await oneClick();
+    clearScene();
 
     await showOverlay("🎉 This concludes the demo. In real life, all of this happens with real people in real time.");
 }
