@@ -128,15 +128,13 @@ function showRescueMap() {
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
         // 3x icons
-        const aditiIcon = L.icon({ iconUrl: "/static/images/aditi.png", iconSize: [54,54], iconAnchor: [27,27] });
-        const help1Icon = L.icon({ iconUrl: "/static/images/help1.png", iconSize: [60,60], iconAnchor: [30,30] });
-        const help2Icon = L.icon({ iconUrl: "/static/images/help2.png", iconSize: [60,60], iconAnchor: [30,30] });
-        const policeIcon = L.icon({ iconUrl: "/static/images/police.png", iconSize: [60,60], iconAnchor: [30,30] });
+        const aditiIcon = L.icon({ iconUrl: "/static/images/aditi.png", iconSize: [36,36], iconAnchor: [18,18] });
+        const help1Icon = L.icon({ iconUrl: "/static/images/help1.png", iconSize: [40,40], iconAnchor: [40,40] });
+        const help2Icon = L.icon({ iconUrl: "/static/images/police.png", iconSize: [40,40], iconAnchor: [40,40] });
 
         const target = [28.61, 77.20];
 
         L.marker(target, { icon: aditiIcon }).addTo(map);
-        L.marker([28.612,77.198], { icon: policeIcon }).addTo(map);
 
         // Heat rings
         for (let i = 0; i < 5; i++) {
@@ -235,8 +233,7 @@ function showGasMap() {
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-        const peopleIcon = L.icon({ iconUrl: "/static/images/people2.png", iconSize: [70,70], iconAnchor: [35,35] });
-        const policeIcon = L.icon({ iconUrl: "/static/images/police.png", iconSize: [60,60], iconAnchor: [30,30] });
+        
 
         const danger = [28.61, 77.20];
         const safe = [28.61, 77.23];
@@ -299,12 +296,14 @@ function unhighlightHarassmentButton() {
 async function startDemo() {
     await showOverlay("Welcome to ResQnet. This is a live simulation of how emergencies are handled.");
 
+    // ----------------- Intro -----------------
     const goblin = createActor("/static/images/goblin.png", "bottom-[-40vh] right-4", 30);
     await sleep(100);
     goblin.style.bottom = "1rem";
     await sayTyped(goblin, "Hi! I will show you how ResQnet helps people in emergencies.");
     goblin.remove();
 
+    // ----------------- Harassment Scene -----------------
     const aditi = createActor("/static/images/aditi.png", "bottom-[-40vh] left-4", 22);
     await sleep(100);
     aditi.style.bottom = "1rem";
@@ -338,6 +337,22 @@ async function startDemo() {
     await sayTyped(aditi, "Thank God... I am safe now. Thanks to ResQnet!");
     aditi.remove();
 
+    // ----------------- PAUSE -----------------
+    await sleep(2000);
+
+    // ----------------- Feature Explanation -----------------
+    const goblin2 = createActor("/static/images/goblin.png", "bottom-[-40vh] right-4", 30);
+    await sleep(100);
+    goblin2.style.bottom = "1rem";
+
+    await sayTyped(goblin2, "Great! But ResQnet is not only for harassment emergencies.");
+    await sayTyped(goblin2, "You can report fire, gas leaks, accidents and many other dangers using these buttons.");
+    await sayTyped(goblin2, "Nearby people, police, and authorities get notified instantly.");
+
+    // Let this explanation breathe (~8 seconds total already via typing + clicks)
+    goblin2.remove();
+
+    // ----------------- SUDDEN GAS ALERT -----------------
     const police1 = createActor("/static/images/police1.png", "top-[-45vh] right-10", 20);
     await sleep(100);
     police1.style.top = "1rem";
@@ -347,6 +362,7 @@ async function startDemo() {
 
     clearScene();
 
+    // ----------------- Evacuation -----------------
     const people2 = createActor("/static/images/people2.png", "bottom-[-60vh] left-0", 60);
     await sleep(100);
     people2.style.bottom = "1rem";
@@ -359,6 +375,16 @@ async function startDemo() {
     if (gasMap) gasMap.remove();
 
     clearScene();
+
+    // ----------------- Final Explanation -----------------
+    const goblin3 = createActor("/static/images/goblin.png", "bottom-[-40vh] right-4", 30);
+    await sleep(100);
+    goblin3.style.bottom = "1rem";
+
+    await sayTyped(goblin3, "Not only users, even the Government and authorities can send emergency alerts like this.");
+    await sayTyped(goblin3, "This ensures everyone in the area gets the warning in time.");
+
+    goblin3.remove();
 
     await showOverlay("🎉 This concludes the demo. In real life, all of this happens with real people in real time.");
 }
