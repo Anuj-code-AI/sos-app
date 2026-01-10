@@ -1,5 +1,5 @@
 // ======================================================
-// ResQnet DEMO — Story Mode (Ultra Cinematic Command Center)
+// ResQnet DEMO — Story Mode (Ultra Cinematic Final)
 // ======================================================
 
 // ----------------- Helpers -----------------
@@ -106,119 +106,173 @@ async function showPanicCard(text) {
     card.remove();
 }
 
-// ----------------- MAP (ULTRA MODE) -----------------
+// ======================================================
+// 🆘 HARASSMENT RESCUE MAP
+// ======================================================
 
-function showDemoMap() {
+function showRescueMap() {
     const container = document.getElementById("alert-container");
     if (!container) return null;
 
     const box = document.createElement("div");
     box.className = "demo-mapbox bg-white p-4 rounded-xl shadow-xl";
 
-    const mapId = "demo-map-" + Date.now();
+    const mapId = "demo-rescue-map-" + Date.now();
     box.innerHTML = `<div id="${mapId}" class="w-full h-[260px] sm:h-[320px] rounded-xl"></div>`;
     container.prepend(box);
 
     setTimeout(() => {
-        const map = L.map(mapId, {
-            zoomControl: false,
-            attributionControl: false
-        }).setView([28.61, 77.20], 14);
+        const map = L.map(mapId, { zoomControl: false, attributionControl: false })
+            .setView([28.61, 77.20], 14);
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-        // Marker icons (small)
-        const aditiIcon = L.icon({ iconUrl: "/static/images/aditi.png", iconSize: [18, 18], iconAnchor: [9, 9] });
-        const help1Icon = L.icon({ iconUrl: "/static/images/help1.png", iconSize: [20, 20], iconAnchor: [10, 10] });
-        const help2Icon = L.icon({ iconUrl: "/static/images/help2.png", iconSize: [20, 20], iconAnchor: [10, 10] });
+        // 3x icons
+        const aditiIcon = L.icon({ iconUrl: "/static/images/aditi.png", iconSize: [54,54], iconAnchor: [27,27] });
+        const help1Icon = L.icon({ iconUrl: "/static/images/help1.png", iconSize: [60,60], iconAnchor: [30,30] });
+        const help2Icon = L.icon({ iconUrl: "/static/images/help2.png", iconSize: [60,60], iconAnchor: [30,30] });
+        const policeIcon = L.icon({ iconUrl: "/static/images/police.png", iconSize: [60,60], iconAnchor: [30,30] });
 
         const target = [28.61, 77.20];
-        L.marker(target, { icon: aditiIcon }).addTo(map);
 
-        // ----------------- HEATMAP DANGER ZONE -----------------
-        const heatLayers = [];
-        for (let i = 0; i < 6; i++) {
-            const c = L.circle(target, {
-                radius: 80 + i * 70,
+        L.marker(target, { icon: aditiIcon }).addTo(map);
+        L.marker([28.612,77.198], { icon: policeIcon }).addTo(map);
+
+        // Heat rings
+        for (let i = 0; i < 5; i++) {
+            L.circle(target, {
+                radius: 120 + i * 120,
                 color: "red",
                 fillColor: "red",
                 fillOpacity: 0.08 - i * 0.01,
                 weight: 0
             }).addTo(map);
-            heatLayers.push(c);
         }
 
-        // ----------------- LIVE SOS EXPANDING RADIUS -----------------
-        const sosCircle = L.circle(target, {
-            radius: 60,
+        // SOS Pulse
+        const sos = L.circle(target, {
+            radius: 80,
             color: "red",
             fillColor: "red",
-            fillOpacity: 0.2
+            fillOpacity: 0.25
         }).addTo(map);
 
-        let sosGrow = true;
+        let grow = true;
         const sosInterval = setInterval(() => {
-            let r = sosCircle.getRadius();
-            if (sosGrow) {
-                r += 15;
-                if (r > 250) sosGrow = false;
+            let r = sos.getRadius();
+            if (grow) {
+                r += 20; if (r > 350) grow = false;
             } else {
-                r -= 15;
-                if (r < 60) sosGrow = true;
+                r -= 20; if (r < 80) grow = true;
             }
-            sosCircle.setRadius(r);
+            sos.setRadius(r);
         }, 120);
 
-        // ----------------- TRAFFIC-AWARE CURVED ROUTES -----------------
-
-        // Helpers start positions
+        // Helpers
         let h1 = [28.605, 77.185];
         let h2 = [28.615, 77.215];
 
-        const helper1 = L.marker(h1, { icon: help1Icon }).addTo(map);
-        const helper2 = L.marker(h2, { icon: help2Icon }).addTo(map);
+        const m1 = L.marker(h1, { icon: help1Icon }).addTo(map);
+        const m2 = L.marker(h2, { icon: help2Icon }).addTo(map);
 
-        // Control points to simulate road curvature / traffic routing
-        const curve1 = [28.607, 77.195];
-        const curve2 = [28.613, 77.205];
+        const c1 = [28.607, 77.195];
+        const c2 = [28.613, 77.205];
 
-        function bezier(p0, p1, p2, t) {
-            const lat = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0];
-            const lng = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1];
-            return [lat, lng];
+        function bezier(p0,p1,p2,t){
+            return [
+                (1-t)*(1-t)*p0[0] + 2*(1-t)*t*p1[0] + t*t*p2[0],
+                (1-t)*(1-t)*p0[1] + 2*(1-t)*t*p1[1] + t*t*p2[1]
+            ];
         }
 
+        const line1 = L.polyline([h1,c1,target], { color:"blue" }).addTo(map);
+        const line2 = L.polyline([h2,c2,target], { color:"green" }).addTo(map);
+
         let t = 0;
-
-        const route1 = L.polyline([h1, curve1, target], { color: "blue" }).addTo(map);
-        const route2 = L.polyline([h2, curve2, target], { color: "green" }).addTo(map);
-
         const interval = setInterval(() => {
             t += 0.015;
             if (t > 1) t = 1;
 
-            const p1 = bezier(h1, curve1, target, t);
-            const p2 = bezier(h2, curve2, target, t);
+            const p1 = bezier(h1,c1,target,t);
+            const p2 = bezier(h2,c2,target,t);
 
-            helper1.setLatLng(p1);
-            helper2.setLatLng(p2);
+            m1.setLatLng(p1);
+            m2.setLatLng(p2);
 
-            route1.setLatLngs([h1, curve1, p1]);
-            route2.setLatLngs([h2, curve2, p2]);
+            line1.setLatLngs([h1,c1,p1]);
+            line2.setLatLngs([h2,c2,p2]);
 
             if (t >= 1) {
                 clearInterval(interval);
-
-                // 🎥 Camera zoom-in
                 map.flyTo(target, 17, { duration: 1.5 });
-
-                setTimeout(() => {
-                    clearInterval(sosInterval);
-                }, 2000);
+                setTimeout(()=>clearInterval(sosInterval),2000);
             }
         }, 60);
 
     }, 200);
+
+    return box;
+}
+
+// ======================================================
+// 🧯 GAS LEAK EVACUATION MAP
+// ======================================================
+
+function showGasMap() {
+    const container = document.getElementById("alert-container");
+    if (!container) return null;
+
+    const box = document.createElement("div");
+    box.className = "demo-mapbox bg-white p-4 rounded-xl shadow-xl";
+
+    const mapId = "demo-gas-map-" + Date.now();
+    box.innerHTML = `<div id="${mapId}" class="w-full h-[260px] sm:h-[320px] rounded-xl"></div>`;
+    container.prepend(box);
+
+    setTimeout(() => {
+        const map = L.map(mapId, { zoomControl: false, attributionControl: false })
+            .setView([28.61, 77.20], 14);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+        const peopleIcon = L.icon({ iconUrl: "/static/images/people2.png", iconSize: [70,70], iconAnchor: [35,35] });
+        const policeIcon = L.icon({ iconUrl: "/static/images/police.png", iconSize: [60,60], iconAnchor: [30,30] });
+
+        const danger = [28.61, 77.20];
+        const safe = [28.61, 77.23];
+
+        // Danger + warning
+        L.circle(danger, { radius: 500, color:"red", fillColor:"red", fillOpacity:0.25 }).addTo(map);
+        L.circle(danger, { radius: 900, color:"orange", fillColor:"orange", fillOpacity:0.15 }).addTo(map);
+
+        // Safe zone
+        L.circle(safe, { radius: 300, color:"green", fillColor:"green", fillOpacity:0.25 }).addTo(map);
+
+        L.marker([28.612,77.198], { icon: policeIcon }).addTo(map);
+
+        let crowd = [28.609,77.202];
+        const crowdMarker = L.marker(crowd, { icon: peopleIcon }).addTo(map);
+
+        const route = L.polyline([crowd,safe], { color:"green", weight:5, dashArray:"10,10" }).addTo(map);
+
+        const steps = 60;
+        let step = 0;
+        const dLat = (safe[0]-crowd[0])/steps;
+        const dLng = (safe[1]-crowd[1])/steps;
+
+        const interval = setInterval(()=>{
+            step++;
+            crowd = [crowd[0]+dLat, crowd[1]+dLng];
+            crowdMarker.setLatLng(crowd);
+            route.setLatLngs([crowd,safe]);
+
+            if(step>=steps){
+                clearInterval(interval);
+                map.flyTo(safe,16,{duration:1.5});
+            }
+        },80);
+
+    },200);
 
     return box;
 }
@@ -238,7 +292,9 @@ function unhighlightHarassmentButton() {
     btn.classList.remove("ring-4", "ring-yellow-400", "animate-pulse");
 }
 
-// ----------------- STORY -----------------
+// ======================================================
+// STORY
+// ======================================================
 
 async function startDemo() {
     await showOverlay("Welcome to ResQnet. This is a live simulation of how emergencies are handled.");
@@ -271,10 +327,10 @@ async function startDemo() {
     police.style.right = "1rem";
     await sayTyped(police, "Police is on the way!");
 
-    const mapBox = showDemoMap();
-    lockInput(6000);
-    await sleep(6200);
-    if (mapBox) mapBox.remove();
+    const rescueMap = showRescueMap();
+    lockInput(6500);
+    await sleep(6700);
+    if (rescueMap) rescueMap.remove();
 
     help1.remove();
     police.remove();
@@ -288,6 +344,19 @@ async function startDemo() {
 
     await showPanicCard("🚨 GAS LEAK NEAR FACTORY! Use mask and move to EAST HIGHWAY immediately!");
     police1.remove();
+
+    clearScene();
+
+    const people2 = createActor("/static/images/people2.png", "bottom-[-60vh] left-0", 60);
+    await sleep(100);
+    people2.style.bottom = "1rem";
+
+    await sayTyped(people2, "Follow the directions. Move to the safe highway.");
+
+    const gasMap = showGasMap();
+    lockInput(6500);
+    await sleep(6700);
+    if (gasMap) gasMap.remove();
 
     clearScene();
 
