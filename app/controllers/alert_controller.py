@@ -16,5 +16,9 @@ def harassment_alert():
     if not sender_id:
         return jsonify({"error": "Unauthorized"}), 401
 
+    if lat is None or lng is None:
+        return jsonify({"error": "Location is required"}), 400
+
     AlertService.send_harassment_alert(lat, lng, sender_id, message)
+
     return jsonify({"status": "alert sent"})
