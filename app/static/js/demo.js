@@ -1,17 +1,14 @@
 // ======================================================
-// ResQnet DEMO — Story Mode (Stable, Cinematic, Click Based)
+// ResQnet DEMO — Story Mode (Ultra Cinematic Command Center)
 // ======================================================
 
 // ----------------- Helpers -----------------
-
 
 let INPUT_LOCKED = false;
 
 function lockInput(ms) {
     INPUT_LOCKED = true;
-    setTimeout(() => {
-        INPUT_LOCKED = false;
-    }, ms);
+    setTimeout(() => INPUT_LOCKED = false, ms);
 }
 
 function sleep(ms) {
@@ -21,7 +18,7 @@ function sleep(ms) {
 function waitForUserClick(el = document.body) {
     return new Promise(resolve => {
         function handler() {
-            if (INPUT_LOCKED) return;   // ❌ Ignore clicks while locked
+            if (INPUT_LOCKED) return;
             el.removeEventListener("click", handler);
             resolve();
         }
@@ -46,7 +43,7 @@ function createActor(imgSrc, positionClass, sizeVW = 25) {
     return img;
 }
 
-// ----------------- Message Bubble (ALWAYS VISIBLE) -----------------
+// ----------------- Message Bubble -----------------
 
 async function sayTyped(actor, text) {
     const bubble = document.createElement("div");
@@ -56,16 +53,15 @@ async function sayTyped(actor, text) {
         text-base sm:text-lg max-w-[85vw] sm:max-w-md
         whitespace-pre-wrap z-[99999]
     `;
-
     bubble.textContent = "";
     document.body.appendChild(bubble);
 
     for (let i = 0; i < text.length; i++) {
         bubble.textContent += text[i];
-        await sleep(30);
+        await sleep(25);
     }
 
-    await waitForUserClick();   // click anywhere
+    await waitForUserClick();
     bubble.remove();
 }
 
@@ -110,36 +106,121 @@ async function showPanicCard(text) {
     card.remove();
 }
 
-// ----------------- Map -----------------
+// ----------------- MAP (ULTRA MODE) -----------------
 
 function showDemoMap() {
     const container = document.getElementById("alert-container");
-    if (!container) return;
+    if (!container) return null;
 
     const box = document.createElement("div");
     box.className = "demo-mapbox bg-white p-4 rounded-xl shadow-xl";
+
     const mapId = "demo-map-" + Date.now();
     box.innerHTML = `<div id="${mapId}" class="w-full h-[260px] sm:h-[320px] rounded-xl"></div>`;
     container.prepend(box);
 
     setTimeout(() => {
-        const map = L.map(mapId).setView([28.61, 77.20], 15);
+        const map = L.map(mapId, {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([28.61, 77.20], 14);
+
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-        L.marker([28.61, 77.20]).addTo(map).bindPopup("Aditi");
+        // Marker icons (small)
+        const aditiIcon = L.icon({ iconUrl: "/static/images/aditi.png", iconSize: [18, 18], iconAnchor: [9, 9] });
+        const help1Icon = L.icon({ iconUrl: "/static/images/help1.png", iconSize: [20, 20], iconAnchor: [10, 10] });
+        const help2Icon = L.icon({ iconUrl: "/static/images/help2.png", iconSize: [20, 20], iconAnchor: [10, 10] });
 
-        let hLat = 28.60;
-        let hLng = 77.18;
-        const helper = L.marker([hLat, hLng]).addTo(map).bindPopup("Helper");
+        const target = [28.61, 77.20];
+        L.marker(target, { icon: aditiIcon }).addTo(map);
+
+        // ----------------- HEATMAP DANGER ZONE -----------------
+        const heatLayers = [];
+        for (let i = 0; i < 6; i++) {
+            const c = L.circle(target, {
+                radius: 80 + i * 70,
+                color: "red",
+                fillColor: "red",
+                fillOpacity: 0.08 - i * 0.01,
+                weight: 0
+            }).addTo(map);
+            heatLayers.push(c);
+        }
+
+        // ----------------- LIVE SOS EXPANDING RADIUS -----------------
+        const sosCircle = L.circle(target, {
+            radius: 60,
+            color: "red",
+            fillColor: "red",
+            fillOpacity: 0.2
+        }).addTo(map);
+
+        let sosGrow = true;
+        const sosInterval = setInterval(() => {
+            let r = sosCircle.getRadius();
+            if (sosGrow) {
+                r += 15;
+                if (r > 250) sosGrow = false;
+            } else {
+                r -= 15;
+                if (r < 60) sosGrow = true;
+            }
+            sosCircle.setRadius(r);
+        }, 120);
+
+        // ----------------- TRAFFIC-AWARE CURVED ROUTES -----------------
+
+        // Helpers start positions
+        let h1 = [28.605, 77.185];
+        let h2 = [28.615, 77.215];
+
+        const helper1 = L.marker(h1, { icon: help1Icon }).addTo(map);
+        const helper2 = L.marker(h2, { icon: help2Icon }).addTo(map);
+
+        // Control points to simulate road curvature / traffic routing
+        const curve1 = [28.607, 77.195];
+        const curve2 = [28.613, 77.205];
+
+        function bezier(p0, p1, p2, t) {
+            const lat = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0];
+            const lng = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1];
+            return [lat, lng];
+        }
+
+        let t = 0;
+
+        const route1 = L.polyline([h1, curve1, target], { color: "blue" }).addTo(map);
+        const route2 = L.polyline([h2, curve2, target], { color: "green" }).addTo(map);
 
         const interval = setInterval(() => {
-            hLat += 0.001;
-            hLng += 0.001;
-            helper.setLatLng([hLat, hLng]);
-        }, 700);
+            t += 0.015;
+            if (t > 1) t = 1;
 
-        setTimeout(() => clearInterval(interval), 10000);
-    }, 300);
+            const p1 = bezier(h1, curve1, target, t);
+            const p2 = bezier(h2, curve2, target, t);
+
+            helper1.setLatLng(p1);
+            helper2.setLatLng(p2);
+
+            route1.setLatLngs([h1, curve1, p1]);
+            route2.setLatLngs([h2, curve2, p2]);
+
+            if (t >= 1) {
+                clearInterval(interval);
+
+                // 🎥 Camera zoom-in
+                map.flyTo(target, 17, { duration: 1.5 });
+
+                setTimeout(() => {
+                    clearInterval(sosInterval);
+                }, 2000);
+            }
+        }, 60);
+
+    }, 200);
+
+    return box;
 }
 
 // ----------------- Highlight Button -----------------
@@ -162,19 +243,12 @@ function unhighlightHarassmentButton() {
 async function startDemo() {
     await showOverlay("Welcome to ResQnet. This is a live simulation of how emergencies are handled.");
 
-    // Goblin
     const goblin = createActor("/static/images/goblin.png", "bottom-[-40vh] right-4", 30);
     await sleep(100);
     goblin.style.bottom = "1rem";
     await sayTyped(goblin, "Hi! I will show you how ResQnet helps people in emergencies.");
     goblin.remove();
 
-    // People (center)
-    const people = createActor("/static/images/people.png", "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2", 40);
-    await sleep(2000);
-    people.remove();
-
-    // Aditi
     const aditi = createActor("/static/images/aditi.png", "bottom-[-40vh] left-4", 22);
     await sleep(100);
     aditi.style.bottom = "1rem";
@@ -186,7 +260,6 @@ async function startDemo() {
     await waitForUserClick(btn || document.body);
     unhighlightHarassmentButton();
 
-    // Helper + Police
     const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 22);
     const police = createActor("/static/images/police.png", "top-[-50vh] right-[-40vw]", 18);
 
@@ -198,17 +271,17 @@ async function startDemo() {
     police.style.right = "1rem";
     await sayTyped(police, "Police is on the way!");
 
-    showDemoMap();
-    lockInput(5000);  // Lock input for 5 seconds while map is shown
+    const mapBox = showDemoMap();
+    lockInput(6000);
+    await sleep(6200);
+    if (mapBox) mapBox.remove();
+
     help1.remove();
     police.remove();
-
 
     await sayTyped(aditi, "Thank God... I am safe now. Thanks to ResQnet!");
     aditi.remove();
 
-
-    // Gas Leak
     const police1 = createActor("/static/images/police1.png", "top-[-45vh] right-10", 20);
     await sleep(100);
     police1.style.top = "1rem";
@@ -216,18 +289,6 @@ async function startDemo() {
     await showPanicCard("🚨 GAS LEAK NEAR FACTORY! Use mask and move to EAST HIGHWAY immediately!");
     police1.remove();
 
-    clearScene();
-
-    // Evacuation Crowd (LEFT, BIG)
-    const people2 = createActor("/static/images/people2.png", "bottom-[-60vh] left-0", 60);
-    await sleep(100);
-    people2.style.bottom = "1rem";
-    people2.style.left = "0";
-
-    await sayTyped(people2, "Follow the directions. Move to the safe highway.");
-    showDemoMap();
-
-    await waitForUserClick();
     clearScene();
 
     await showOverlay("🎉 This concludes the demo. In real life, all of this happens with real people in real time.");
