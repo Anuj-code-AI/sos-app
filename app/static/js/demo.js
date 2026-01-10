@@ -30,6 +30,24 @@ function clearScene() {
     document.querySelectorAll(".demo-actor, .demo-bubble, .demo-overlay, .demo-panic, .demo-mapbox").forEach(e => e.remove());
 }
 
+function scrollToElement(selector) {
+    const el = document.querySelector(selector);
+    if (!el) return;
+
+    el.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
 // ----------------- Actor -----------------
 
 function createActor(imgSrc, positionClass, sizeVW = 25) {
@@ -128,9 +146,9 @@ function showRescueMap() {
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
         // 3x icons
-        const aditiIcon = L.icon({ iconUrl: "/static/images/aditi.png", iconSize: [36,36], iconAnchor: [18,18] });
-        const help1Icon = L.icon({ iconUrl: "/static/images/help1.png", iconSize: [40,40], iconAnchor: [40,40] });
-        const help2Icon = L.icon({ iconUrl: "/static/images/police.png", iconSize: [40,40], iconAnchor: [40,40] });
+        const aditiIcon = L.icon({ iconUrl: "/static/images/aditi.png", iconSize: [36, 36], iconAnchor: [18, 18] });
+        const help1Icon = L.icon({ iconUrl: "/static/images/help1.png", iconSize: [40, 40], iconAnchor: [20, 20] });
+        const help2Icon = L.icon({ iconUrl: "/static/images/police.png", iconSize: [40, 40], iconAnchor: [20, 20] });
 
         const target = [28.61, 77.20];
 
@@ -176,34 +194,34 @@ function showRescueMap() {
         const c1 = [28.607, 77.195];
         const c2 = [28.613, 77.205];
 
-        function bezier(p0,p1,p2,t){
+        function bezier(p0, p1, p2, t) {
             return [
-                (1-t)*(1-t)*p0[0] + 2*(1-t)*t*p1[0] + t*t*p2[0],
-                (1-t)*(1-t)*p0[1] + 2*(1-t)*t*p1[1] + t*t*p2[1]
+                (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0],
+                (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1]
             ];
         }
 
-        const line1 = L.polyline([h1,c1,target], { color:"blue" }).addTo(map);
-        const line2 = L.polyline([h2,c2,target], { color:"green" }).addTo(map);
+        const line1 = L.polyline([h1, c1, target], { color: "blue" }).addTo(map);
+        const line2 = L.polyline([h2, c2, target], { color: "green" }).addTo(map);
 
         let t = 0;
         const interval = setInterval(() => {
             t += 0.015;
             if (t > 1) t = 1;
 
-            const p1 = bezier(h1,c1,target,t);
-            const p2 = bezier(h2,c2,target,t);
+            const p1 = bezier(h1, c1, target, t);
+            const p2 = bezier(h2, c2, target, t);
 
             m1.setLatLng(p1);
             m2.setLatLng(p2);
 
-            line1.setLatLngs([h1,c1,p1]);
-            line2.setLatLngs([h2,c2,p2]);
+            line1.setLatLngs([h1, c1, p1]);
+            line2.setLatLngs([h2, c2, p2]);
 
             if (t >= 1) {
                 clearInterval(interval);
                 map.flyTo(target, 17, { duration: 1.5 });
-                setTimeout(()=>clearInterval(sosInterval),2000);
+                setTimeout(() => clearInterval(sosInterval), 2000);
             }
         }, 60);
 
@@ -217,6 +235,19 @@ function showRescueMap() {
 // ======================================================
 
 function showGasMap() {
+    // Big icons
+    const peopleIcon = L.icon({
+        iconUrl: "/static/images/people2.png",
+        iconSize: [70, 70],
+        iconAnchor: [35, 35]
+    });
+
+    const policeIcon = L.icon({
+        iconUrl: "/static/images/police1.png",
+        iconSize: [60, 60],
+        iconAnchor: [30, 30]
+    });
+
     const container = document.getElementById("alert-container");
     if (!container) return null;
 
@@ -233,43 +264,43 @@ function showGasMap() {
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-        
+
 
         const danger = [28.61, 77.20];
         const safe = [28.61, 77.23];
 
         // Danger + warning
-        L.circle(danger, { radius: 500, color:"red", fillColor:"red", fillOpacity:0.25 }).addTo(map);
-        L.circle(danger, { radius: 900, color:"orange", fillColor:"orange", fillOpacity:0.15 }).addTo(map);
+        L.circle(danger, { radius: 500, color: "red", fillColor: "red", fillOpacity: 0.25 }).addTo(map);
+        L.circle(danger, { radius: 900, color: "orange", fillColor: "orange", fillOpacity: 0.15 }).addTo(map);
 
         // Safe zone
-        L.circle(safe, { radius: 300, color:"green", fillColor:"green", fillOpacity:0.25 }).addTo(map);
+        L.circle(safe, { radius: 300, color: "green", fillColor: "green", fillOpacity: 0.25 }).addTo(map);
 
-        L.marker([28.612,77.198], { icon: policeIcon }).addTo(map);
+        L.marker([28.612, 77.198], { icon: policeIcon }).addTo(map);
 
-        let crowd = [28.609,77.202];
+        let crowd = [28.609, 77.202];
         const crowdMarker = L.marker(crowd, { icon: peopleIcon }).addTo(map);
 
-        const route = L.polyline([crowd,safe], { color:"green", weight:5, dashArray:"10,10" }).addTo(map);
+        const route = L.polyline([crowd, safe], { color: "green", weight: 5, dashArray: "10,10" }).addTo(map);
 
         const steps = 60;
         let step = 0;
-        const dLat = (safe[0]-crowd[0])/steps;
-        const dLng = (safe[1]-crowd[1])/steps;
+        const dLat = (safe[0] - crowd[0]) / steps;
+        const dLng = (safe[1] - crowd[1]) / steps;
 
-        const interval = setInterval(()=>{
+        const interval = setInterval(() => {
             step++;
-            crowd = [crowd[0]+dLat, crowd[1]+dLng];
+            crowd = [crowd[0] + dLat, crowd[1] + dLng];
             crowdMarker.setLatLng(crowd);
-            route.setLatLngs([crowd,safe]);
+            route.setLatLngs([crowd, safe]);
 
-            if(step>=steps){
+            if (step >= steps) {
                 clearInterval(interval);
-                map.flyTo(safe,16,{duration:1.5});
+                map.flyTo(safe, 16, { duration: 1.5 });
             }
-        },80);
+        }, 80);
 
-    },200);
+    }, 200);
 
     return box;
 }
@@ -311,9 +342,19 @@ async function startDemo() {
     await sayTyped(aditi, "Someone is following me... I am scared.");
     await sayTyped(aditi, "Please press the Harassment button.");
 
+    // 👇 Scroll to the harassment button area
+    scrollToElement("button[onclick='openConfirmHarassment()']");
+
+    // Small delay so user sees the movement
+    await sleep(800);
+
     const btn = highlightHarassmentButton();
     await waitForUserClick(btn || document.body);
     unhighlightHarassmentButton();
+
+    // 👆 After click, go back to top for cinematic view
+    scrollToTop();
+
 
     const help1 = createActor("/static/images/help1.png", "bottom-[-40vh] right-4", 22);
     const police = createActor("/static/images/police.png", "top-[-50vh] right-[-40vw]", 18);
@@ -347,6 +388,16 @@ async function startDemo() {
 
     await sayTyped(goblin2, "Great! But ResQnet is not only for harassment emergencies.");
     await sayTyped(goblin2, "You can report fire, gas leaks, accidents and many other dangers using these buttons.");
+
+    // 👇 Scroll to services section
+    scrollToElement("#services");
+
+    // Let user see the services section
+    await sleep(1500);
+
+    // 👆 Go back to top for next cinematic scene
+    scrollToTop();
+
     await sayTyped(goblin2, "Nearby people, police, and authorities get notified instantly.");
 
     // Let this explanation breathe (~8 seconds total already via typing + clicks)
