@@ -4,6 +4,16 @@
 
 // ----------------- Helpers -----------------
 
+
+let INPUT_LOCKED = false;
+
+function lockInput(ms) {
+    INPUT_LOCKED = true;
+    setTimeout(() => {
+        INPUT_LOCKED = false;
+    }, ms);
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -11,6 +21,7 @@ function sleep(ms) {
 function waitForUserClick(el = document.body) {
     return new Promise(resolve => {
         function handler() {
+            if (INPUT_LOCKED) return;   // ❌ Ignore clicks while locked
             el.removeEventListener("click", handler);
             resolve();
         }
@@ -92,7 +103,7 @@ async function showPanicCard(text) {
             { transform: "translate(-50%, -50%) translateX(-6px)" },
             { transform: "translate(-50%, -50%) translateX(6px)" }
         ],
-        { duration: 90, iterations: 40 }
+        { duration: 60, iterations: 30 }
     );
 
     await waitForUserClick();
@@ -188,11 +199,14 @@ async function startDemo() {
     await sayTyped(police, "Police is on the way!");
 
     showDemoMap();
+    lockInput(5000);  // Lock input for 5 seconds while map is shown
     help1.remove();
     police.remove();
 
+
     await sayTyped(aditi, "Thank God... I am safe now. Thanks to ResQnet!");
     aditi.remove();
+
 
     // Gas Leak
     const police1 = createActor("/static/images/police1.png", "top-[-45vh] right-10", 20);
